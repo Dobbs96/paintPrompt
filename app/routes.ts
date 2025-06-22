@@ -8,5 +8,5 @@ import {
 
 export default [
     index("routes/welcomepage.tsx"),
-    route("/home", "./home/Home.tsx"),
+    route("/home", "./home/home.tsx"),
 ] satisfies RouteConfig;
