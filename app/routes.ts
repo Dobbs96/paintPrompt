@@ -8,6 +8,6 @@ import {
 
 export default [
     route("/", "routes/welcomepage.tsx"),
-    route("/home", "./home/Home.tsx"),
+    route("/home", "./routes/home.tsx"),
     route("/login", "routes/login.tsx"),
 ] satisfies RouteConfig;
