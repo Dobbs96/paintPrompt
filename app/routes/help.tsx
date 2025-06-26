@@ -3,40 +3,56 @@ import { useNavigate } from "react-router";
 export default function HelpPage() {
     const navigate = useNavigate();
     return (
-        //main wrapper
-        <div>
-            {/* //header */}
-            <div>
-                <h1>Welcome to Paint Prompt Help</h1>
-                <p>
+        <div className="min-h-screen bg-white text-gray-800">
+            {/* Header */}
+            <div className="bg-indigo-400 text-white py-16 text-center px-4">
+                <h1 className="text-3xl md:text-4xl font-bold">
+                    Welcome to Paint Prompt Help
+                </h1>
+                <p className="mt-4 text-sm md:text-base">
                     Find assistance and answers to your questions about using
                     the Paint Prompt application.
                 </p>
-                <button onClick={() => navigate("/home")}>Back to Home</button>
+                <button
+                    onClick={() => navigate("/home")}
+                    className="mt-6 px-6 py-2 border border-white text-white rounded hover:bg-white hover:text-indigo-500 transition"
+                >
+                    Back to Home
+                </button>
             </div>
-            {/* // body1 */}
-            <div>
-                <h2>Help Topics</h2>
-                <p>Explore the various help topics below:</p>
 
-                <div>
-                    {/* //left */}
-                    <div>
-                        <div>light icon</div>
+            {/* Help Topics */}
+            <div className="max-w-6xl mx-auto px-6 py-16">
+                <h2 className="text-3xl font-bold text-center mb-2">
+                    Help Topics
+                </h2>
+                <p className="text-center text-gray-600 mb-12">
+                    Explore the various help topics below:
+                </p>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Left Topic Card */}
+                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                        <div className="text-3xl mr-4">💡</div>
                         <div>
-                            <h3>Using the Application</h3>
-                            <p>
+                            <h3 className="text-lg font-semibold">
+                                Using the Application
+                            </h3>
+                            <p className="text-sm text-gray-600">
                                 Learn how to navigate and use Paint Prompt
                                 effectively.
                             </p>
                         </div>
                     </div>
-                    {/* //right */}
-                    <div>
-                        <div>Pencil icon</div>
+
+                    {/* Right Topic Card */}
+                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                        <div className="text-3xl mr-4">✏️</div>
                         <div>
-                            <h3>Creating Prompts</h3>
-                            <p>
+                            <h3 className="text-lg font-semibold">
+                                Creating Prompts
+                            </h3>
+                            <p className="text-sm text-gray-600">
                                 Guidelines on how to create your personalized
                                 painting prompts.
                             </p>
@@ -44,35 +60,56 @@ export default function HelpPage() {
                     </div>
                 </div>
             </div>
-            {/* //body2 */}
-            <div>
-                {/* //left */}
-                <div>
-                    <h2>Contact Us</h2>
-                    <p>Reach out for more specific inquiries or feedback.</p>
-                </div>
-                {/* //right */}
-                <div>
+
+            {/* Contact Section */}
+            <div className="bg-gray-50 py-16 px-6">
+                <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
+                    {/* Left Side */}
                     <div>
-                        <div>mail icon</div>
-                        <div>
-                            <h3>E-Mail Us</h3>
-                            <p>support@paintprompt.com</p>
-                        </div>
+                        <h2 className="text-2xl font-bold mb-2">Contact Us</h2>
+                        <p className="text-gray-600">
+                            Reach out for more specific inquiries or feedback.
+                        </p>
                     </div>
 
-                    <div>Phone icon</div>
-                    <div>
-                        <h3>Call Us</h3>
-                        <p>+1(234) 555-6789</p>
+                    {/* Right Side */}
+                    <div className="space-y-6">
+                        {/* Email Contact */}
+                        <div className="flex">
+                            <div className="text-3xl mr-4">📧</div>
+                            <div>
+                                <h3 className="text-lg font-semibold">
+                                    E-Mail Us
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                    support@paintprompt.com
+                                </p>
+                            </div>
+                        </div>
+
+                        {/* Phone Contact */}
+                        <div className="flex">
+                            <div className="text-3xl mr-4">📞</div>
+                            <div>
+                                <h3 className="text-lg font-semibold">
+                                    Call Us
+                                </h3>
+                                <p className="text-sm text-gray-600">
+                                    +1 (234) 555-6789
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            {/* //footer */}
-            <div>
+
+            {/* Footer */}
+            <div className="bg-gray-100 text-center py-6 text-sm text-gray-600">
                 <p>© 2023 Paint Prompt. All rights reserved.</p>
                 <p>Follow us on social media for updates!</p>
-                <p>Privacy Policy | Terms of Service | Help Center</p>
+                <p className="mt-2">
+                    Privacy Policy | Terms of Service | Help Center
+                </p>
             </div>
         </div>
     );
