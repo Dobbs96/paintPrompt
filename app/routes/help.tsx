@@ -15,7 +15,7 @@ export default function HelpPage() {
                 </p>
                 <button
                     onClick={() => navigate("/home")}
-                    className="mt-6 px-6 py-2 border border-white text-white rounded hover:bg-white hover:text-indigo-500 transition"
+                    className="mt-6 px-6 py-2 border border-white text-white rounded hover:bg-white hover:text-indigo-500 transition cursor-pointer"
                 >
                     Back to Home
                 </button>
@@ -32,7 +32,7 @@ export default function HelpPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Topic Card */}
-                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer">
                         <div className="text-3xl mr-4  mt-3">💡</div>
                         <div>
                             <h3 className="text-lg font-semibold">
@@ -46,7 +46,7 @@ export default function HelpPage() {
                     </div>
 
                     {/* Right Topic Card */}
-                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
+                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer">
                         <div className="text-3xl mr-4 mt-3">✏️</div>
                         <div>
                             <h3 className="text-lg font-semibold">
