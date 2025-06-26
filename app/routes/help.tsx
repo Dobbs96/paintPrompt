@@ -33,7 +33,7 @@ export default function HelpPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Topic Card */}
                     <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
-                        <div className="text-3xl mr-4">💡</div>
+                        <div className="text-3xl mr-4  mt-3">💡</div>
                         <div>
                             <h3 className="text-lg font-semibold">
                                 Using the Application
@@ -47,7 +47,7 @@ export default function HelpPage() {
 
                     {/* Right Topic Card */}
                     <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition">
-                        <div className="text-3xl mr-4">✏️</div>
+                        <div className="text-3xl mr-4 mt-3">✏️</div>
                         <div>
                             <h3 className="text-lg font-semibold">
                                 Creating Prompts
@@ -76,7 +76,7 @@ export default function HelpPage() {
                     <div className="space-y-6">
                         {/* Email Contact */}
                         <div className="flex">
-                            <div className="text-3xl mr-4">📧</div>
+                            <div className="text-3xl mr-4 mt-2">📧</div>
                             <div>
                                 <h3 className="text-lg font-semibold">
                                     E-Mail Us
@@ -89,7 +89,7 @@ export default function HelpPage() {
 
                         {/* Phone Contact */}
                         <div className="flex">
-                            <div className="text-3xl mr-4">📞</div>
+                            <div className="text-3xl mr-4  mt-2">📞</div>
                             <div>
                                 <h3 className="text-lg font-semibold">
                                     Call Us
@@ -104,12 +104,10 @@ export default function HelpPage() {
             </div>
 
             {/* Footer */}
-            <div className="bg-gray-100 text-center py-6 text-sm text-gray-600">
+            <div className="bg-gray-100 text-center py-6 text-sm text-gray-600 flex flex-row justify-center items-center gap-x-8 text-center flex-wrap">
                 <p>© 2023 Paint Prompt. All rights reserved.</p>
                 <p>Follow us on social media for updates!</p>
-                <p className="mt-2">
-                    Privacy Policy | Terms of Service | Help Center
-                </p>
+                <p>Privacy Policy | Terms of Service | Help Center</p>
             </div>
         </div>
     );
