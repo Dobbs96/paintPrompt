@@ -32,7 +32,10 @@ export default function HelpPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Topic Card */}
-                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer">
+                    <button
+                        onClick={() => navigate("/home-useapp")}
+                        className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
+                    >
                         <div className="text-3xl mr-4  mt-3">💡</div>
                         <div>
                             <h3 className="text-lg font-semibold">
@@ -43,10 +46,13 @@ export default function HelpPage() {
                                 effectively.
                             </p>
                         </div>
-                    </div>
+                    </button>
 
                     {/* Right Topic Card */}
-                    <div className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer">
+                    <button
+                        onClick={() => navigate("/home-create-prompt")}
+                        className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
+                    >
                         <div className="text-3xl mr-4 mt-3">✏️</div>
                         <div>
                             <h3 className="text-lg font-semibold">
@@ -57,7 +63,7 @@ export default function HelpPage() {
                                 painting prompts.
                             </p>
                         </div>
-                    </div>
+                    </button>
                 </div>
             </div>
 
