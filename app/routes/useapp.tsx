@@ -6,8 +6,19 @@ export default function UseAppPage() {
         <div>
             <div className="bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-pink-400 py-12 text-center px-6">
                 <h1 className="text-3xl md:text-4xl font-bold text-white">
-                    Creating Your Own Prompt
+                    Help Post #2: Creating Prompts
                 </h1>
+                <p className="mt-2 text-white text-sm md:text-base">
+                    Guidelines for Personalized Painting Inspiration
+                </p>
+                <div className="mt-6 flex justify-center gap-4">
+                    <button
+                        onClick={() => navigate("/home")}
+                        className="bg-black text-white px-5 py-2 rounded hover:bg-gray-800 transition"
+                    >
+                        Get Started
+                    </button>
+                </div>
             </div>
 
             {/* Main Content */}
