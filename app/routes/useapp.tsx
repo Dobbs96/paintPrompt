@@ -4,23 +4,28 @@ export default function UseAppPage() {
     const navigate = useNavigate();
     return (
         <div>
-            {/* Header */}
             <div className="bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-pink-400 py-12 text-center px-6">
-                <h1>Header</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-white">
+                    Creating Your Own Prompt
+                </h1>
             </div>
-            {/* Body */}
-            {/* Body Left */}
-            <div>
-                <h2>Creating Meaningful Painting Prompts</h2>
-                <p>
-                    Want to create your own prompt instead of using the
-                    dropdowns? Here’s how to write custom input that gets you a
-                    meaningful and inspiring painting prompt.
-                </p>
-            </div>
-            {/* Body Rights */}
-            <div>
-                <div className="space-y-4">
+
+            {/* Main Content */}
+            <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
+                {/* Left Section */}
+                <div>
+                    <h2 className="text-2xl font-bold mb-2">
+                        Creating Meaningful Painting Prompts
+                    </h2>
+                    <p className="text-gray-600">
+                        Want to create your own prompt instead of using the
+                        dropdowns? Here’s how to write custom input that gets
+                        you a meaningful and inspiring painting prompt.
+                    </p>
+                </div>
+
+                {/* Right Section – Steps */}
+                <div className="space-y-6">
                     {[
                         {
                             title: "1. Use Emotion-Based Language",
@@ -49,21 +54,21 @@ export default function UseAppPage() {
                     ].map((step, idx) => (
                         <div
                             key={idx}
-                            className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm"
+                            className="border border-gray-200 rounded-lg p-5 bg-white shadow-md"
                         >
-                            <h3 className="font-semibold text-md">
+                            <h3 className="font-semibold text-lg text-indigo-700">
                                 {step.title}
                             </h3>
                             <p className="text-sm text-gray-600 mt-1">
                                 {step.desc}
                             </p>
-                            <div>
-                                <p className="bg-gray-200 text-sm text-gray-600 mt-1">
+                            <div className="flex gap-2 mt-3">
+                                <span className="bg-gray-200 px-2 py-1 rounded text-xs text-gray-700 font-medium">
                                     {step.typeOne}
-                                </p>
-                                <p className="bg-gray-200 text-sm text-gray-600 mt-1">
+                                </span>
+                                <span className="bg-gray-200 px-2 py-1 rounded text-xs text-gray-700 font-medium">
                                     {step.typeTwo}
-                                </p>
+                                </span>
                             </div>
                         </div>
                     ))}
