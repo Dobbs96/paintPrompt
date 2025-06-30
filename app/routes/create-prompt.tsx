@@ -5,7 +5,7 @@ export default function CreatePromptPage() {
     return (
         <div className="bg-white text-gray-800">
             {/* Header Section */}
-            <section className="bg-pink-300 py-12 text-center px-6">
+            <section className="bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-pink-400 py-12 text-center px-6">
                 <h1 className="text-2xl md:text-3xl font-bold text-white">
                     Help Post #1: How to Use Paint Prompt Effectively
                 </h1>
@@ -13,7 +13,10 @@ export default function CreatePromptPage() {
                     Maximize your painting journey with our tips!
                 </p>
                 <div className="mt-6 flex justify-center gap-4">
-                    <button className="bg-black text-white px-5 py-2 rounded hover:bg-gray-800 transition">
+                    <button
+                        onClick={() => navigate("/home")}
+                        className="bg-black text-white px-5 py-2 rounded hover:bg-gray-800 transition"
+                    >
                         Get Started
                     </button>
                 </div>
@@ -74,7 +77,8 @@ export default function CreatePromptPage() {
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {/* Place Holders 
+            This will be changed to add randoms user comments */}
             <section className="bg-gray-50 py-16 px-6">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-xl font-bold text-center mb-2">
@@ -107,12 +111,11 @@ export default function CreatePromptPage() {
             </section>
 
             {/* Footer */}
-            <footer className="bg-white text-center text-sm text-gray-600 py-6 border-t border-gray-200">
-                <p>© 2025 Paint Prompt. All rights reserved.</p>
-                <p className="mt-1">
-                    Privacy Policy | Terms of Service | Contact Us
-                </p>
-            </footer>
+            <div className="bg-gray-100 text-center py-6 text-sm text-gray-600 flex flex-row justify-center items-center gap-x-8 text-center flex-wrap">
+                <p>© 2023 Paint Prompt. All rights reserved.</p>
+                <p>Follow us on social media for updates!</p>
+                <p>Privacy Policy | Terms of Service | Help Center</p>
+            </div>
         </div>
     );
 }
