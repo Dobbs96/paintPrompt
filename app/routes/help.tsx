@@ -33,7 +33,7 @@ export default function HelpPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     {/* Left Topic Card */}
                     <button
-                        onClick={() => navigate("/home-useapp")}
+                        onClick={() => navigate("/useapp")}
                         className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
                     >
                         <div className="text-3xl mr-4  mt-3">💡</div>
@@ -50,7 +50,7 @@ export default function HelpPage() {
 
                     {/* Right Topic Card */}
                     <button
-                        onClick={() => navigate("/home-create-prompt")}
+                        onClick={() => navigate("/create-prompt")}
                         className="flex p-6 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition cursor-pointer"
                     >
                         <div className="text-3xl mr-4 mt-3">✏️</div>
