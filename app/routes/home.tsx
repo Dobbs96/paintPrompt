@@ -1,9 +1,11 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router";
 
 const Home: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [prompt, setPrompt] = useState("");
     const [ratingHover, setRatingHover] = useState(0);
+    const navigate = useNavigate();
 
     const mockImages = [
         {
@@ -70,16 +72,28 @@ const Home: React.FC = () => {
 
                     {/* Footer Links*/}
                     <div className="absolute bottom-0 left-0 right-0 flex justify-center space-x-6 text-sm text-gray-400">
-                        <a href="#" className="hover:underline">
+                        <a
+                            onClick={() => navigate("/help")}
+                            className="hover:underline"
+                        >
                             Help
                         </a>
-                        <a href="#" className="hover:underline">
+                        <a
+                            onClick={() => navigate("/help")}
+                            className="hover:underline"
+                        >
                             Contact Us
                         </a>
-                        <a href="#" className="hover:underline">
+                        <a
+                            onClick={() => navigate("/privacypolicy")}
+                            className="hover:underline"
+                        >
                             Privacy Policy
                         </a>
-                        <a href="#" className="hover:underline">
+                        <a
+                            onClick={() => navigate("/termsandservice")}
+                            className="hover:underline"
+                        >
                             Terms of Service
                         </a>
                     </div>
@@ -104,13 +118,22 @@ const Home: React.FC = () => {
                     isOpen ? "right-64" : "right-8"
                 } pr-6 space-x-6`}
             >
-                <a href="#" className="hover:underline text-gray-300">
+                <a
+                    onClick={() => navigate("/gallery")}
+                    className="hover:underline text-gray-300"
+                >
                     Gallery
                 </a>
-                <a href="#" className="hover:underline text-gray-300">
+                <a
+                    onClick={() => navigate("/materials")}
+                    className="hover:underline text-gray-300"
+                >
                     Materials
                 </a>
-                <a href="#" className="hover:underline text-red-400">
+                <a
+                    onClick={() => navigate("/")}
+                    className="hover:underline text-red-400"
+                >
                     Sign Out
                 </a>
             </div>
