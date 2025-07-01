@@ -9,4 +9,5 @@ import {
 export default [
   index("routes/home.tsx"),
   route("/home", "./home/Home.tsx"),
+  route("/materials", "./routes/Materials.tsx"), 
 ] satisfies RouteConfig;
