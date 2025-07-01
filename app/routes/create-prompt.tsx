@@ -66,7 +66,7 @@ export default function CreatePromptPage() {
                             key={idx}
                             className="border border-gray-200 rounded-lg p-4 bg-white shadow-sm"
                         >
-                            <h3 className="font-semibold text-md">
+                            <h3 className="font-semibold text-md text-indigo-700">
                                 {step.title}
                             </h3>
                             <p className="text-sm text-gray-600 mt-1">
