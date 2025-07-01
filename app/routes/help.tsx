@@ -5,7 +5,7 @@ export default function HelpPage() {
     return (
         <div className="min-h-screen bg-white text-gray-800">
             {/* Header */}
-            <div className="bg-indigo-400 text-white py-16 text-center px-4">
+            <div className="bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-pink-400 text-white py-16 text-center px-4">
                 <h1 className="text-3xl md:text-4xl font-bold">
                     Welcome to Paint Prompt Help
                 </h1>
