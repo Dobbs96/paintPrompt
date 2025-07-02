@@ -63,11 +63,12 @@ export default function Termsandservice() {
                     account.
                 </p>
                 <p className="mt-2 text-xl">
-                    <strong>5. Account</strong>
+                    <strong>5. Intellectual Property</strong>
                     <br></br>
-                    You are responsible for keeping your account information
-                    secure. We are not liable for unauthorized use of your
-                    account.
+                    All app content,
+                    including prompt generation,
+                    is owned by Paint Prompt or its content partners.
+                    You may not copy or use content without permission.
                 </p>
                 <p className="mt-2 text-xl">
                     <strong>6. Termination</strong>
