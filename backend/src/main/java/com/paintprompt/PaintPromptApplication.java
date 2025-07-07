@@ -8,6 +8,7 @@ public class PaintPromptApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PaintPromptApplication.class, args);
+		
 	}
 
 }

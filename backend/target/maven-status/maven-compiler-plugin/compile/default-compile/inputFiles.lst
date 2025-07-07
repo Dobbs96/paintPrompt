@@ -1,4 +1,6 @@
-C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\Database\Models\UserCredential.java
-C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\Database\Respositories\UserCredentialRepository.java
+C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\controllers\AuthController.java
+C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\database\models\UserCredential.java
+C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\database\repositories\UserCredentialRepository.java
 C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\PaintPromptApplication.java
-C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\Service\AuthController.java
+C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\webconfig\SecurityConfig.java
+C:\Users\mrpur\OneDrive\Desktop\CSCI 499\paintPrompt\backend\src\main\java\com\paintprompt\webconfig\WebConfig.java
