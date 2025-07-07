@@ -22,4 +22,16 @@ public class AuthController {
         userRepo.save(user);
         return "User registered successfully!";
     }
+
+    @PostMapping("/login")
+    public String login(@RequestBody UserCredential user) {
+        UserCredential existingUser = userRepo.findById(user.getUsername()).orElse(null);
+        if (existingUser == null) {
+            return "User not found!";
+        }
+        if (!existingUser.getPassword().equals(user.getPassword())) {
+            return "Incorrect password!";
+        }
+        return "Sign in successful!";
+    }
 }
