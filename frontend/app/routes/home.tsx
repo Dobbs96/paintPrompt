@@ -11,7 +11,15 @@ const RAINBOW_COLORS = [
   "#9400D3", // Violet
 ];
 
-function RainbowText({ text, rainbowDuration = 3000, interval = 17000 }: { text: string; rainbowDuration?: number; interval?: number }) {
+function RainbowText({
+  text,
+  rainbowDuration = 3000,
+  interval = 17000,
+}: {
+  text: string;
+  rainbowDuration?: number;
+  interval?: number;
+}) {
   const [rainbow, setRainbow] = useState(false);
   const [rainbowStart, setRainbowStart] = useState(0);
   const rainbowLength = 6; // Number of letters to show rainbow at a time
@@ -49,7 +57,12 @@ function RainbowText({ text, rainbowDuration = 3000, interval = 17000 }: { text:
       {text.split("").map((char, i) => {
         let color = "#000";
         let textShadow = "none";
-        if (rainbow && i >= rainbowStart && i < rainbowStart + rainbowLength && char !== " ") {
+        if (
+          rainbow &&
+          i >= rainbowStart &&
+          i < rainbowStart + rainbowLength &&
+          char !== " "
+        ) {
           const colorIndex = (i - rainbowStart) % RAINBOW_COLORS.length;
           color = RAINBOW_COLORS[colorIndex];
           textShadow = `0 0 8px ${color}, 0 0 16px ${color}`;
@@ -78,7 +91,7 @@ const MOODS = [
   "Angry",
   "Excited",
   "Surprise Me",
-  "Other..."
+  "Other...",
 ];
 
 const Home: React.FC = () => {
@@ -137,7 +150,11 @@ const Home: React.FC = () => {
         <div className="max-w-3xl mx-auto min-h-[calc(100vh-120px)] relative">
           <div className="text-center mb-12 pt-6">
             <h1 className="text-5xl font-semibold tracking-tight mb-2">
-              <RainbowText text="Paint Prompt" rainbowDuration={3000} interval={17000} />
+              <RainbowText
+                text="Paint Prompt"
+                rainbowDuration={3000}
+                interval={17000}
+              />
             </h1>
             <p className="text-xl mb-3" style={{ color: secondaryText }}>
               How are you feeling today?
@@ -193,13 +210,24 @@ const Home: React.FC = () => {
 
           {/* Mood Options Animation - now directly below with a small gap */}
           {moodOptionsVisible && (
-            <div className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${showMoodOptions ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} style={{ zIndex: 2 }}>
+            <div
+              className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
+                showMoodOptions
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              style={{ zIndex: 2 }}
+            >
               {MOODS.map((mood) => {
                 const isSelected = selectedMood === mood;
                 return mood !== "Other..." ? (
                   <button
                     key={mood}
-                    className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${isSelected ? 'border-[#AC83CA] font-bold' : 'border-gray-300'}`}
+                    className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                      isSelected
+                        ? "border-[#AC83CA] font-bold"
+                        : "border-gray-300"
+                    }`}
                     style={{ margin: "0 0.1rem" }}
                     onClick={() => {
                       setSelectedMood(mood);
@@ -212,10 +240,18 @@ const Home: React.FC = () => {
                     {mood}
                   </button>
                 ) : (
-                  <div key="other" className="flex flex-col items-center" style={{ margin: "0 0.1rem" }}>
+                  <div
+                    key="other"
+                    className="flex flex-col items-center"
+                    style={{ margin: "0 0.1rem" }}
+                  >
                     {!customMood && (
                       <button
-                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${selectedMood && !MOODS.includes(selectedMood) ? 'border-[#AC83CA] font-bold' : 'border-gray-300'}`}
+                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                          selectedMood && !MOODS.includes(selectedMood)
+                            ? "border-[#AC83CA] font-bold"
+                            : "border-gray-300"
+                        }`}
                         onClick={() => setCustomMood("typing")}
                         style={{ minWidth: 0 }}
                       >
@@ -229,22 +265,28 @@ const Home: React.FC = () => {
                         style={{ minWidth: 80, maxWidth: 160 }}
                         placeholder="Other..."
                         value={selectedMood}
-                        onChange={e => setSelectedMood(e.target.value)}
+                        onChange={(e) => setSelectedMood(e.target.value)}
                         onBlur={() => {
                           if (selectedMood.trim()) {
                             setTimeout(() => {
                               setShowMoodOptions(false);
-                              setTimeout(() => setMoodOptionsVisible(false), 500);
+                              setTimeout(
+                                () => setMoodOptionsVisible(false),
+                                500
+                              );
                             }, 1000);
                           }
                           setCustomMood("");
                         }}
-                        onKeyDown={e => {
+                        onKeyDown={(e) => {
                           if (e.key === "Enter") {
                             if (selectedMood.trim()) {
                               setTimeout(() => {
                                 setShowMoodOptions(false);
-                                setTimeout(() => setMoodOptionsVisible(false), 500);
+                                setTimeout(
+                                  () => setMoodOptionsVisible(false),
+                                  500
+                                );
                               }, 1000);
                             }
                             setCustomMood("");
@@ -259,7 +301,9 @@ const Home: React.FC = () => {
           )}
 
           <div
-            className={`max-w-xl mx-auto transition-all duration-500 ${moodOptionsVisible ? 'mt-8' : 'mt-3'}`}
+            className={`max-w-xl mx-auto transition-all duration-500 ${
+              moodOptionsVisible ? "mt-8" : "mt-3"
+            }`}
             style={{ zIndex: 1 }}
           >
             <textarea
