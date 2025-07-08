@@ -18,5 +18,6 @@ export default [
     route("/privacypolicy", "routes/privacypolicy.tsx"),
     route("/termsandservice", "routes/termsandservice.tsx"),
     route("/gallery", "routes/gallery.tsx"),
-    route("/forgotpassword", "routes/forgotpassword.tsx")
+    route("/forgotpassword", "routes/forgotpassword.tsx"),
+    route("/passwordreset", "routes/passwordreset.tsx"),
 ] satisfies RouteConfig;
