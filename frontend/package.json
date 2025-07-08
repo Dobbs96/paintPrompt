@@ -4,7 +4,7 @@
     "type": "module",
     "proxy": "http://localhost:8080",
     "scripts": {
-        "build": "react-router build",
+        "build": "react-scripts build",
         "dev": "react-router dev",
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
