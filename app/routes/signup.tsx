@@ -10,7 +10,7 @@ export default function Signup() {
             <div className="flex items-center justify-between w-full px-20 pt-10 pb-10">
 
                 <button 
-                    className = "text-white text-5xl rounded px-3 py-3 font-semibold relative z-10" 
+                    className = "text-white text-3xl rounded px-3 py-3 font-semibold relative z-10" 
                     style = {{backgroundColor: '#AC83CA'}}
                     onClick = {() => navigate("/")}
                 >
@@ -25,7 +25,7 @@ export default function Signup() {
 
             <div className="absolute inset-y-0 left-0 flex items-center pl-25">
                 <h1 className="text-black text-5xl font-semibold">
-                    Log In
+                    Sign Up
                 </h1>
             </div>
                         
