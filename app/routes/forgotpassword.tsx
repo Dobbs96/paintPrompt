@@ -21,13 +21,16 @@ export default function ForgotPassword() {
         className="px-4 py-3 w-72 rounded-lg border-2 border-gray-300 text-base"
       />
 
-      <button className="px-6 py-3 bg-[#AC83CA] text-white rounded-lg font-bold text-base hover:bg-[#946cb5] transition">
+      <button 
+        className="px-6 py-3 bg-[#AC83CA] text-white rounded-lg font-bold text-base hover:bg-[#946cb5] transition"
+        onClick={() => navigate("/passwordreset")}
+      >
         Send Reset Link
       </button>
 
       {/* figma showed the back to login to be on the bottom left, i just kept it in the middle so it doesnt break when page shrinks for now */}
       <div 
-        className="mt-10 text-sm text-[#AC83CA] font-bold underline cursor-pointer flex items-center gap-1"
+        className="mt-10 text-sm text-[#AC83CA] font-bold cursor-pointer flex items-center gap-1"
         onClick={() => navigate("/login")}
       >
         <span className="text-lg">←</span>
