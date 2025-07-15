@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useLocation } from "react-router";
 
 const RAINBOW_COLORS = [
   "#FF0000", // Red
@@ -94,15 +95,83 @@ const MOODS = [
   "Other...",
 ];
 
+const COMPLEXITIES = [
+  "Simple",
+  "Standard",
+  "Intricate",
+  "Other..."
+]
+
+const FORMATS = [
+  "Landscape",
+  "Portrait",
+  "Square",
+  "Other..."
+]
+
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [prompt, setPrompt] = useState("");
   const [ratingHover, setRatingHover] = useState(0);
+
   const [showMoodOptions, setShowMoodOptions] = useState(false);
   const [moodOptionsVisible, setMoodOptionsVisible] = useState(false); // for fade-out
   const [selectedMood, setSelectedMood] = useState("");
   const [customMood, setCustomMood] = useState("");
+
   const navigate = useNavigate();
+
+  const [showComplexOptions, setShowComplexOptions] = useState(false);
+  const [complexOptionsVisible, setComplexOptionsVisible] = useState(false); // fade out
+  const [selectedComplex, setSelectedComplex] = useState("");
+  const [customComplex, setCustomComplex] = useState("");
+
+  const [showFormatOptions, setShowFormatOptions] = useState(false);
+  const [formatOptionsVisible, setFormatOptionsVisible] = useState(false); // fade out
+  const [selectedFormat, setSelectedFormat] = useState("");
+  const [customFormat, setCustomFormat] = useState("");
+
+  const [showMediumOptions, setShowMediumOptions] = useState(false);
+  const [mediumOptionVisible, setMediumOptionsVisible] = useState(false);
+  const [selectedMedium, setSelectedMedium] = useState("");
+  const [customMedium, setCustomMedium] = useState("");
+
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [materials, setMaterials] = useState<string[]>([]);
+
+  const location = useLocation();
+  const passedUsername = location.state?.username || ""; // fallback to empty if undefined
+
+
+  const getMaterials = async () => {
+    if (!username || !password) {
+      setMessage("Login is Required");
+      return;
+    }
+    try {
+      const response = await fetch("http://localhost:8080/api/user/get/materials", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({username})
+      });
+      const result = await response.text();
+      setMessage(result);
+      if(response.ok) {
+        const parsedMaterials = result.split(",").map((m) => m.trim()).filter(Boolean);
+        setMaterials(parsedMaterials);
+      }
+    }
+    catch(error) {
+      console.error("Error fetching materials:", error);
+      setMessage("Failed to connect to server.");
+    }
+  }
+
+  
 
   useEffect(() => {
     if (showMoodOptions) {
@@ -111,7 +180,30 @@ const Home: React.FC = () => {
       // If mood options are closed without selection (no fade-out), hide immediately
       setMoodOptionsVisible(false);
     }
-  }, [showMoodOptions]);
+
+    if(showComplexOptions) {
+      setComplexOptionsVisible(true);
+    }
+    else {
+      setComplexOptionsVisible(false);
+    }
+
+    if(showFormatOptions) {
+      setFormatOptionsVisible(true);
+    }
+    else {
+      setFormatOptionsVisible(false);
+    }
+
+    if(showMediumOptions) {
+      setMediumOptionsVisible(true)
+    }
+    else {
+      setMediumOptionsVisible(false)
+    }
+
+  }, [showMoodOptions,showComplexOptions, showFormatOptions, showMediumOptions]);
+
 
   const mockImages = [
     {
@@ -139,6 +231,11 @@ const Home: React.FC = () => {
   const textColor = "#1A1A1A";
   const secondaryText = "#6B7280";
   const borderColor = "#E5E7EB";
+
+
+
+
+
 
   return (
     <div
@@ -183,6 +280,7 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
+              onClick={() => setShowMediumOptions((prev) => !prev)}
             >
               Medium
             </button>
@@ -193,6 +291,7 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
+              onClick = {() => setShowComplexOptions((prev) => !prev)}
             >
               Complexity
             </button>
@@ -203,10 +302,275 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
+              onClick = {() => setShowFormatOptions((prev) => !prev)}
             >
               Format
             </button>
           </div>
+
+          {mediumOptionVisible && (
+  <div
+    className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
+      showMediumOptions ? "opacity-100" : "opacity-0 pointer-events-none"
+    }`}
+    style={{ zIndex: 2 }}
+  >
+    {materials.slice(0, 6).map((medium) => {
+      const isSelected = selectedMedium === medium;
+      return (
+        <button
+          key={medium}
+          className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+            isSelected ? "border-[#AC83CA] font-bold" : "border-gray-300"
+          }`}
+          style={{ margin: "0 0.1rem" }}
+          onClick={() => {
+            setSelectedMedium(medium);
+            setTimeout(() => {
+              setShowMediumOptions(false);
+              setTimeout(() => setMediumOptionsVisible(false), 500);
+            }, 1000);
+          }}
+        >
+          {medium}
+        </button>
+      );
+    })}
+    <div key="other" className="flex flex-col items-center" style={{ margin: "0 0.1rem" }}>
+      {!customMedium && (
+        <button
+          className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+            selectedMedium && !materials.includes(selectedMedium)
+              ? "border-[#AC83CA] font-bold"
+              : "border-gray-300"
+          }`}
+          onClick={() => setCustomMedium("typing")}
+          style={{ minWidth: 0 }}
+        >
+          Other...
+        </button>
+      )}
+      {customMedium === "typing" && (
+        <input
+          autoFocus
+          className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
+          style={{ minWidth: 80, maxWidth: 160 }}
+          placeholder="Other..."
+          value={selectedMedium}
+          onChange={(e) => setSelectedMedium(e.target.value)}
+          onBlur={() => {
+            if (selectedMedium.trim()) {
+              setTimeout(() => {
+                setShowMediumOptions(false);
+                setTimeout(() => setMediumOptionsVisible(false), 500);
+              }, 1000);
+            }
+            setCustomMedium("");
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (selectedMedium.trim()) {
+                setTimeout(() => {
+                  setShowMediumOptions(false);
+                  setTimeout(() => setMediumOptionsVisible(false), 500);
+                }, 1000);
+              }
+              setCustomMedium("");
+            }
+          }}
+        />
+      )}
+    </div>
+  </div>
+)}
+
+
+          {/* Format Options Animation - now directly below with a small gap */}
+          {formatOptionsVisible && (
+            <div
+              className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
+                showFormatOptions
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              style={{ zIndex: 2 }}
+            >
+              {FORMATS.map((format) => {
+                const isSelected = selectedFormat === format;
+                return format !== "Other..." ? (
+                  <button
+                    key={format}
+                    className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                      isSelected
+                        ? "border-[#AC83CA] font-bold"
+                        : "border-gray-300"
+                    }`}
+                    style={{ margin: "0 0.1rem" }}
+                    onClick={() => {
+                      setSelectedFormat(format);
+                      setTimeout(() => {
+                        setShowFormatOptions(false);
+                        setTimeout(() => setFormatOptionsVisible(false), 500); // match fade duration
+                      }, 1000);
+                    }}
+                  >
+                    {format}
+                  </button>
+                ) : (
+                  <div
+                    key="other"
+                    className="flex flex-col items-center"
+                    style={{ margin: "0 0.1rem" }}
+                  >
+                    {!customFormat && (
+                      <button
+                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                          selectedFormat && !FORMATS.includes(selectedFormat)
+                            ? "border-[#AC83CA] font-bold"
+                            : "border-gray-300"
+                        }`}
+                        onClick={() => setCustomFormat("typing")}
+                        style={{ minWidth: 0 }}
+                      >
+                        Other...
+                      </button>
+                    )}
+                    {customFormat === "typing" && (
+                      <input
+                        autoFocus
+                        className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
+                        style={{ minWidth: 80, maxWidth: 160 }}
+                        placeholder="Other..."
+                        value={selectedFormat}
+                        onChange={(e) => setSelectedFormat(e.target.value)}
+                        onBlur={() => {
+                          if (selectedFormat.trim()) {
+                            setTimeout(() => {
+                              setShowFormatOptions(false);
+                              setTimeout(
+                                () => setFormatOptionsVisible(false),
+                                500
+                              );
+                            }, 1000);
+                          }
+                          setCustomFormat("");
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            if (selectedFormat.trim()) {
+                              setTimeout(() => {
+                                setShowFormatOptions(false);
+                                setTimeout(
+                                  () => setFormatOptionsVisible(false),
+                                  500
+                                );
+                              }, 1000);
+                            }
+                            setCustomFormat("");
+                          }
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+
+          {/* Complex Options Animation - now directly below with a small gap */}
+          {complexOptionsVisible && (
+            <div
+              className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
+                showComplexOptions
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              style={{ zIndex: 2 }}
+            >
+              {COMPLEXITIES.map((complexity) => {
+                const isSelected = selectedComplex === complexity;
+                return complexity !== "Other..." ? (
+                  <button
+                    key={complexity}
+                    className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                      isSelected
+                        ? "border-[#AC83CA] font-bold"
+                        : "border-gray-300"
+                    }`}
+                    style={{ margin: "0 0.1rem" }}
+                    onClick={() => {
+                      setSelectedComplex(complexity);
+                      setTimeout(() => {
+                        setShowComplexOptions(false);
+                        setTimeout(() => setComplexOptionsVisible(false), 500); // match fade duration
+                      }, 1000);
+                    }}
+                  >
+                    {complexity}
+                  </button>
+                ) : (
+                  <div
+                    key="other"
+                    className="flex flex-col items-center"
+                    style={{ margin: "0 0.1rem" }}
+                  >
+                    {!customComplex && (
+                      <button
+                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                          selectedComplex && !COMPLEXITIES.includes(selectedComplex)
+                            ? "border-[#AC83CA] font-bold"
+                            : "border-gray-300"
+                        }`}
+                        onClick={() => setCustomComplex("typing")}
+                        style={{ minWidth: 0 }}
+                      >
+                        Other...
+                      </button>
+                    )}
+                    {customComplex === "typing" && (
+                      <input
+                        autoFocus
+                        className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
+                        style={{ minWidth: 80, maxWidth: 160 }}
+                        placeholder="Other..."
+                        value={selectedComplex}
+                        onChange={(e) => setSelectedComplex(e.target.value)}
+                        onBlur={() => {
+                          if (selectedComplex.trim()) {
+                            setTimeout(() => {
+                              setShowComplexOptions(false);
+                              setTimeout(
+                                () => setComplexOptionsVisible(false),
+                                500
+                              );
+                            }, 1000);
+                          }
+                          setCustomComplex("");
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            if (selectedComplex.trim()) {
+                              setTimeout(() => {
+                                setShowComplexOptions(false);
+                                setTimeout(
+                                  () => setComplexOptionsVisible(false),
+                                  500
+                                );
+                              }, 1000);
+                            }
+                            setCustomComplex("");
+                          }
+                        }}
+                      />
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+
 
           {/* Mood Options Animation - now directly below with a small gap */}
           {moodOptionsVisible && (
@@ -299,7 +663,6 @@ const Home: React.FC = () => {
               })}
             </div>
           )}
-
           <div
             className={`max-w-xl mx-auto transition-all duration-500 ${
               moodOptionsVisible ? "mt-8" : "mt-3"
