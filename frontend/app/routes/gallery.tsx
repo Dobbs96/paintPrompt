@@ -1,6 +1,8 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 export default function Gallery() {
+  const navigate = useNavigate();
   const [firstArtwork, setFirstArtwork] = useState("");
   const [secondArtwork, setSecondArtwork] = useState("");
 
@@ -13,8 +15,23 @@ export default function Gallery() {
     { title: "Ocean Serenity", date: "2023-07-15", image: "/images/ocean.jpg" },
   ];
 
+  const buttonStyle = {
+    background: "#AC83CA",
+    color: "#fff",
+    border: "1px solid #E5E7EB",
+  };
+
   return (
-    <div className="p-8 font-sans">
+    <div className="p-8 font-sans bg-[#F5F3FF] min-h-screen">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate("/home")}
+        className="mb-4 px-4 py-2 rounded-full font-semibold text-white shadow"
+        style={buttonStyle}
+      >
+        ← Back to Home
+      </button>
+
       <header className="bg-pink-300 text-white text-center p-8 rounded-lg mb-8">
         <h1 className="text-3xl font-bold mb-2">Your Painting Journey</h1>
         <p className="text-lg">Explore your artistic growth and creativity.</p>
@@ -54,8 +71,18 @@ export default function Gallery() {
             className="border px-4 py-2 rounded"
           />
           <div className="flex gap-4 justify-center mt-2">
-            <button className="px-4 py-2 border rounded">Cancel</button>
-            <button className="px-4 py-2 bg-purple-400 text-white rounded">Compare</button>
+            <button
+              className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+              style={buttonStyle}
+            >
+              Cancel
+            </button>
+            <button
+              className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+              style={buttonStyle}
+            >
+              Compare
+            </button>
           </div>
         </div>
       </section>
@@ -67,8 +94,18 @@ export default function Gallery() {
           <input type="text" placeholder="Artwork Title" className="border px-4 py-2 rounded" />
           <input type="file" accept="image/*" className="border px-4 py-2 rounded" />
           <div className="flex gap-4 justify-center mt-2">
-            <button className="px-4 py-2 border rounded">Upload</button>
-            <button className="px-4 py-2 bg-purple-400 text-white rounded">Publish</button>
+            <button
+              className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+              style={buttonStyle}
+            >
+              Upload
+            </button>
+            <button
+              className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+              style={buttonStyle}
+            >
+              Publish
+            </button>
           </div>
         </div>
       </section>
