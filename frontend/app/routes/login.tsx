@@ -23,6 +23,7 @@ export default function Login() {
       const result = await response.text();
       setMessage(result);
       if (response.ok && result === "Sign in successful!") {
+        localStorage.setItem("username", username);
         setTimeout(() => navigate("/Home"), 1000);
       }
     } catch (error) {

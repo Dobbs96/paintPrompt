@@ -95,19 +95,9 @@ const MOODS = [
   "Other...",
 ];
 
-const COMPLEXITIES = [
-  "Simple",
-  "Standard",
-  "Intricate",
-  "Other..."
-]
+const COMPLEXITIES = ["Simple", "Standard", "Intricate", "Other..."];
 
-const FORMATS = [
-  "Landscape",
-  "Portrait",
-  "Square",
-  "Other..."
-]
+const FORMATS = ["Landscape", "Portrait", "Square", "Other..."];
 
 const Home: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -136,42 +126,48 @@ const Home: React.FC = () => {
   const [selectedMedium, setSelectedMedium] = useState("");
   const [customMedium, setCustomMedium] = useState("");
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState<string | null>(null);
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
   const [materials, setMaterials] = useState<string[]>([]);
 
   const location = useLocation();
-  const passedUsername = location.state?.username || ""; // fallback to empty if undefined
-
 
   const getMaterials = async () => {
-    if (!username || !password) {
+    if (!username) {
       setMessage("Login is Required");
       return;
     }
     try {
-      const response = await fetch("http://localhost:8080/api/user/get/materials", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({username})
-      });
+      const response = await fetch(
+        `http://localhost:8080/api/user/get/materials?username=${encodeURIComponent(
+          username
+        )}`
+      );
       const result = await response.text();
       setMessage(result);
-      if(response.ok) {
-        const parsedMaterials = result.split(",").map((m) => m.trim()).filter(Boolean);
+      if (response.ok) {
+        const parsedMaterials = result
+          .split(",")
+          .map((m) => m.trim())
+          .filter(Boolean);
         setMaterials(parsedMaterials);
       }
-    }
-    catch(error) {
+    } catch (error) {
       console.error("Error fetching materials:", error);
       setMessage("Failed to connect to server.");
     }
-  }
+  };
 
-  
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setUsername(localStorage.getItem("username"));
+    }
+  }, []);
+
+  useEffect(() => {
+    getMaterials();
+  }, [username]);
 
   useEffect(() => {
     if (showMoodOptions) {
@@ -181,29 +177,29 @@ const Home: React.FC = () => {
       setMoodOptionsVisible(false);
     }
 
-    if(showComplexOptions) {
+    if (showComplexOptions) {
       setComplexOptionsVisible(true);
-    }
-    else {
+    } else {
       setComplexOptionsVisible(false);
     }
 
-    if(showFormatOptions) {
+    if (showFormatOptions) {
       setFormatOptionsVisible(true);
-    }
-    else {
+    } else {
       setFormatOptionsVisible(false);
     }
 
-    if(showMediumOptions) {
-      setMediumOptionsVisible(true)
+    if (showMediumOptions) {
+      setMediumOptionsVisible(true);
+    } else {
+      setMediumOptionsVisible(false);
     }
-    else {
-      setMediumOptionsVisible(false)
-    }
-
-  }, [showMoodOptions,showComplexOptions, showFormatOptions, showMediumOptions]);
-
+  }, [
+    showMoodOptions,
+    showComplexOptions,
+    showFormatOptions,
+    showMediumOptions,
+  ]);
 
   const mockImages = [
     {
@@ -231,11 +227,6 @@ const Home: React.FC = () => {
   const textColor = "#1A1A1A";
   const secondaryText = "#6B7280";
   const borderColor = "#E5E7EB";
-
-
-
-
-
 
   return (
     <div
@@ -291,7 +282,7 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
-              onClick = {() => setShowComplexOptions((prev) => !prev)}
+              onClick={() => setShowComplexOptions((prev) => !prev)}
             >
               Complexity
             </button>
@@ -302,88 +293,98 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
-              onClick = {() => setShowFormatOptions((prev) => !prev)}
+              onClick={() => setShowFormatOptions((prev) => !prev)}
             >
               Format
             </button>
           </div>
 
           {mediumOptionVisible && (
-  <div
-    className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
-      showMediumOptions ? "opacity-100" : "opacity-0 pointer-events-none"
-    }`}
-    style={{ zIndex: 2 }}
-  >
-    {materials.slice(0, 6).map((medium) => {
-      const isSelected = selectedMedium === medium;
-      return (
-        <button
-          key={medium}
-          className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
-            isSelected ? "border-[#AC83CA] font-bold" : "border-gray-300"
-          }`}
-          style={{ margin: "0 0.1rem" }}
-          onClick={() => {
-            setSelectedMedium(medium);
-            setTimeout(() => {
-              setShowMediumOptions(false);
-              setTimeout(() => setMediumOptionsVisible(false), 500);
-            }, 1000);
-          }}
-        >
-          {medium}
-        </button>
-      );
-    })}
-    <div key="other" className="flex flex-col items-center" style={{ margin: "0 0.1rem" }}>
-      {!customMedium && (
-        <button
-          className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
-            selectedMedium && !materials.includes(selectedMedium)
-              ? "border-[#AC83CA] font-bold"
-              : "border-gray-300"
-          }`}
-          onClick={() => setCustomMedium("typing")}
-          style={{ minWidth: 0 }}
-        >
-          Other...
-        </button>
-      )}
-      {customMedium === "typing" && (
-        <input
-          autoFocus
-          className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
-          style={{ minWidth: 80, maxWidth: 160 }}
-          placeholder="Other..."
-          value={selectedMedium}
-          onChange={(e) => setSelectedMedium(e.target.value)}
-          onBlur={() => {
-            if (selectedMedium.trim()) {
-              setTimeout(() => {
-                setShowMediumOptions(false);
-                setTimeout(() => setMediumOptionsVisible(false), 500);
-              }, 1000);
-            }
-            setCustomMedium("");
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              if (selectedMedium.trim()) {
-                setTimeout(() => {
-                  setShowMediumOptions(false);
-                  setTimeout(() => setMediumOptionsVisible(false), 500);
-                }, 1000);
-              }
-              setCustomMedium("");
-            }
-          }}
-        />
-      )}
-    </div>
-  </div>
-)}
-
+            <div
+              className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
+                showMediumOptions
+                  ? "opacity-100"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              style={{ zIndex: 2 }}
+            >
+              {materials.slice(0, 6).map((medium) => {
+                const isSelected = selectedMedium === medium;
+                return (
+                  <button
+                    key={medium}
+                    className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                      isSelected
+                        ? "border-[#AC83CA] font-bold"
+                        : "border-gray-300"
+                    }`}
+                    style={{ margin: "0 0.1rem" }}
+                    onClick={() => {
+                      setSelectedMedium(medium);
+                      setTimeout(() => {
+                        setShowMediumOptions(false);
+                        setTimeout(() => setMediumOptionsVisible(false), 500);
+                      }, 1000);
+                    }}
+                  >
+                    {medium}
+                  </button>
+                );
+              })}
+              <div
+                key="other"
+                className="flex flex-col items-center"
+                style={{ margin: "0 0.1rem" }}
+              >
+                {!customMedium && (
+                  <button
+                    className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                      selectedMedium && !materials.includes(selectedMedium)
+                        ? "border-[#AC83CA] font-bold"
+                        : "border-gray-300"
+                    }`}
+                    onClick={() => setCustomMedium("typing")}
+                    style={{ minWidth: 0 }}
+                  >
+                    Other...
+                  </button>
+                )}
+                {customMedium === "typing" && (
+                  <input
+                    autoFocus
+                    className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
+                    style={{ minWidth: 80, maxWidth: 160 }}
+                    placeholder="Other..."
+                    value={selectedMedium}
+                    onChange={(e) => setSelectedMedium(e.target.value)}
+                    onBlur={() => {
+                      if (selectedMedium.trim()) {
+                        setTimeout(() => {
+                          setShowMediumOptions(false);
+                          setTimeout(() => setMediumOptionsVisible(false), 500);
+                        }, 1000);
+                      }
+                      setCustomMedium("");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        if (selectedMedium.trim()) {
+                          setTimeout(() => {
+                            setShowMediumOptions(false);
+                            setTimeout(
+                              () => setMediumOptionsVisible(false),
+                              500
+                            );
+                          }, 1000);
+                        }
+                        setCustomMedium("");
+                      }
+                    }}
+                  />
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Format Options Animation - now directly below with a small gap */}
           {formatOptionsVisible && (
@@ -477,7 +478,6 @@ const Home: React.FC = () => {
             </div>
           )}
 
-
           {/* Complex Options Animation - now directly below with a small gap */}
           {complexOptionsVisible && (
             <div
@@ -518,7 +518,8 @@ const Home: React.FC = () => {
                     {!customComplex && (
                       <button
                         className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
-                          selectedComplex && !COMPLEXITIES.includes(selectedComplex)
+                          selectedComplex &&
+                          !COMPLEXITIES.includes(selectedComplex)
                             ? "border-[#AC83CA] font-bold"
                             : "border-gray-300"
                         }`}
@@ -569,8 +570,6 @@ const Home: React.FC = () => {
               })}
             </div>
           )}
-
-
 
           {/* Mood Options Animation - now directly below with a small gap */}
           {moodOptionsVisible && (
