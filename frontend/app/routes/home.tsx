@@ -95,7 +95,7 @@ const MOODS = [
   "Other...",
 ];
 
-const COMPLEXITIES = ["Simple", "Standard", "Intricate", "Other..."];
+const COMPLEXITIES = ["Easy", "Normal", "Hard", "Other..."];
 
 const FORMATS = ["Landscape", "Portrait", "Square", "Other..."];
 
@@ -260,7 +260,14 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
-              onClick={() => setShowMoodOptions((prev) => !prev)}
+              onClick={() => {
+
+                setShowMoodOptions((prev) => !prev);
+                setShowMediumOptions(false);
+                setShowComplexOptions(false);
+                setShowFormatOptions(false);
+
+              }}
             >
               Mood
             </button>
@@ -271,7 +278,14 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
-              onClick={() => setShowMediumOptions((prev) => !prev)}
+              onClick={() => {
+
+                setShowMoodOptions(false);
+                setShowMediumOptions((prev) => !prev);
+                setShowComplexOptions(false);
+                setShowFormatOptions(false);
+
+              }}
             >
               Medium
             </button>
@@ -282,7 +296,14 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
-              onClick={() => setShowComplexOptions((prev) => !prev)}
+              onClick={() => {
+
+                setShowMoodOptions(false);
+                setShowMediumOptions(false);
+                setShowComplexOptions((prev) => !prev);
+                setShowFormatOptions(false);
+
+              }}            
             >
               Complexity
             </button>
@@ -293,7 +314,14 @@ const Home: React.FC = () => {
                 color: "#fff",
                 border: `1px solid ${borderColor}`,
               }}
-              onClick={() => setShowFormatOptions((prev) => !prev)}
+              onClick={() => {
+
+                setShowMoodOptions(false);
+                setShowMediumOptions(false);
+                setShowComplexOptions(false);
+                setShowFormatOptions((prev) => !prev);
+
+              }}                  
             >
               Format
             </button>
