@@ -10,7 +10,7 @@ public class UserData {
     @Id
     private String username;
     private String materials;
-    private String communityRatings; // Store as plain text, parse in controller
+    private String communityRatings;
 
     // Getters and setters
     public String getUsername() {
