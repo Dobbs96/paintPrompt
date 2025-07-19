@@ -4,7 +4,7 @@
     "type": "module",
     "proxy": "http://localhost:8080",
     "scripts": {
-        "build": "react-router build",
+        "build": "react-scripts build",
         "dev": "react-router dev",
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
@@ -15,7 +15,8 @@
         "isbot": "^5.1.27",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "react-router": "^7.6.3"
+        "react-router": "^7.6.3",
+        "react-router-dom": "7.6.3"
     },
     "devDependencies": {
         "@react-router/dev": "^7.6.3",
@@ -27,5 +28,9 @@
         "typescript": "^5.8.3",
         "vite": "^6.3.3",
         "vite-tsconfig-paths": "^5.1.4"
+    },
+    "engines": {
+        "node": "22.x",
+        "npm": "10.x"
     }
 }
