@@ -130,7 +130,7 @@ const Home: React.FC = () => {
 
     const [username, setUsername] = useState<string | null>(null);
     //const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
+    const [_message, setMessage] = useState("");
     const [materials, setMaterials] = useState<string[]>([]);
 
     //const location = useLocation();
