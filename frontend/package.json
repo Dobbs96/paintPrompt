@@ -4,18 +4,18 @@
     "type": "module",
     "proxy": "http://localhost:8080",
     "scripts": {
-        "build": "react-scripts build",
+        "build": "react-router build",
         "dev": "react-router dev",
         "start": "react-router-serve ./build/server/index.js",
         "typecheck": "react-router typegen && tsc"
     },
     "dependencies": {
         "@react-router/node": "^7.5.3",
-        "@react-router/serve": "^7.5.3",
+        "@react-router/serve": "^7.6.3",
         "isbot": "^5.1.27",
         "react": "^19.1.0",
         "react-dom": "^19.1.0",
-        "react-router": "^7.5.3"
+        "react-router": "^7.6.3"
     },
     "devDependencies": {
         "@react-router/dev": "^7.6.3",

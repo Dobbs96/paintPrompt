@@ -1,0 +1,165 @@
+{
+  "_chunk-NL6KNZEE-D2iJMjKv.js": {
+    "file": "assets/chunk-NL6KNZEE-D2iJMjKv.js",
+    "name": "chunk-NL6KNZEE",
+    "imports": [
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "_index-BWFZKfll.js": {
+    "file": "assets/index-BWFZKfll.js",
+    "name": "index"
+  },
+  "app/root.tsx?__react-router-build-client-route": {
+    "file": "assets/root-CgBvzGTH.js",
+    "name": "root",
+    "src": "app/root.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ],
+    "css": [
+      "assets/root-p9s7LMCz.css"
+    ]
+  },
+  "app/routes/Materials.tsx?__react-router-build-client-route": {
+    "file": "assets/Materials-kIilva67.js",
+    "name": "Materials",
+    "src": "app/routes/Materials.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/create-prompt.tsx?__react-router-build-client-route": {
+    "file": "assets/create-prompt-B6E3EPm5.js",
+    "name": "create-prompt",
+    "src": "app/routes/create-prompt.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/forgotpassword.tsx?__react-router-build-client-route": {
+    "file": "assets/forgotpassword-Blp2dpNm.js",
+    "name": "forgotpassword",
+    "src": "app/routes/forgotpassword.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/gallery.tsx?__react-router-build-client-route": {
+    "file": "assets/gallery-Cz3u9bgm.js",
+    "name": "gallery",
+    "src": "app/routes/gallery.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/help.tsx?__react-router-build-client-route": {
+    "file": "assets/help-DvBNG4yb.js",
+    "name": "help",
+    "src": "app/routes/help.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/home.tsx?__react-router-build-client-route": {
+    "file": "assets/home-CU7ifYIP.js",
+    "name": "home",
+    "src": "app/routes/home.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/login.tsx?__react-router-build-client-route": {
+    "file": "assets/login-CkCdCXt7.js",
+    "name": "login",
+    "src": "app/routes/login.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/passwordreset.tsx?__react-router-build-client-route": {
+    "file": "assets/passwordreset-CpZup3lD.js",
+    "name": "passwordreset",
+    "src": "app/routes/passwordreset.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/privacypolicy.tsx?__react-router-build-client-route": {
+    "file": "assets/privacypolicy-EMKBMjKL.js",
+    "name": "privacypolicy",
+    "src": "app/routes/privacypolicy.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/signup.tsx?__react-router-build-client-route": {
+    "file": "assets/signup-C7d90OuE.js",
+    "name": "signup",
+    "src": "app/routes/signup.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/termsandservice.tsx?__react-router-build-client-route": {
+    "file": "assets/termsandservice-Dsz2r5a6.js",
+    "name": "termsandservice",
+    "src": "app/routes/termsandservice.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/useapp.tsx?__react-router-build-client-route": {
+    "file": "assets/useapp-Dm4fvhKk.js",
+    "name": "useapp",
+    "src": "app/routes/useapp.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "app/routes/welcomepage.tsx?__react-router-build-client-route": {
+    "file": "assets/welcomepage-5chikACA.js",
+    "name": "welcomepage",
+    "src": "app/routes/welcomepage.tsx?__react-router-build-client-route",
+    "isEntry": true,
+    "imports": [
+      "_chunk-NL6KNZEE-D2iJMjKv.js",
+      "_index-BWFZKfll.js"
+    ]
+  },
+  "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx": {
+    "file": "assets/entry.client-De38uiDi.js",
+    "name": "entry.client",
+    "src": "node_modules/@react-router/dev/dist/config/defaults/entry.client.tsx",
+    "isEntry": true,
+    "imports": [
+      "_index-BWFZKfll.js",
+      "_chunk-NL6KNZEE-D2iJMjKv.js"
+    ]
+  }
+}
