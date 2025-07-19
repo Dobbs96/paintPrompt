@@ -4,10 +4,10 @@
     "type": "module",
     "proxy": "http://localhost:8080",
     "scripts": {
+        "start": "react-scripts start",
         "build": "react-scripts build",
-        "dev": "react-router dev",
-        "start": "react-router-serve ./build/server/index.js",
-        "typecheck": "react-router typegen && tsc"
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
     },
     "dependencies": {
         "@react-router/node": "^7.5.3",
