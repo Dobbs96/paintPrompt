@@ -11,25 +11,23 @@ export default function Welcomepage() {
         <h1 className="text-3xl sm:text-4xl font-bold mb-6">
           Welcome to Paint Prompt!
         </h1>
-        <p className="text-lg sm:text-xl font-bold mb-6">
+        <p className="text-lg sm:text-xl font-semibold mb-6">
           Inspiration starts with your mood
         </p>
 
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-
+        <div className="flex flex-col sm:flex-row gap-4">
           <button
-            className="w-full sm:w-auto px-19 py-3 border-2 border-black bg-white text-black rounded-lg text-base font-bold"
+            className="w-full sm:w-48 px-6 py-3 border border-gray-300 bg-white hover:bg-gray-100 text-black rounded-lg text-base font-semibold"
             onClick={() => navigate("/signup")}
           >
             Sign Up
           </button>
           <button
-            className="w-full sm:w-auto px-21 py-3 border-2 border-[#AC83CA] bg-[#AC83CA] text-white rounded-lg text-base font-bold"
+            className="w-full sm:w-48 px-6 py-3 border-2 border-[#AC83CA] bg-[#AC83CA] hover:bg-[#946BB8] text-white rounded-lg text-base font-semibold"
             onClick={() => navigate("/login")}
           >
             Log In
           </button>
-          
         </div>
 
       </div>
@@ -37,20 +35,19 @@ export default function Welcomepage() {
       {/* footer links */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-2 sm:gap-4 mb-10 px-4">
 
-        {/* previously was a button*/}
-        <p className = "text-sm sm:text-base font-bold">         
+        <p className="text-sm sm:text-base font-medium">
           © 2023 Paint Prompt. All rights reserved
         </p>
 
         <button
-          className="text-sm sm:text-base font-bold"
+          className="text-sm sm:text-base font-medium"
           onClick={() => navigate("/privacypolicy")}
         >
           Privacy Policy
         </button>
 
         <button
-          className="text-sm sm:text-base font-bold"
+          className="text-sm sm:text-base font-medium"
           onClick={() => navigate("/termsandservice")}
         >
           Terms and Service
