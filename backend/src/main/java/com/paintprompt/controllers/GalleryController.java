@@ -1,6 +1,6 @@
 package com.paintprompt.controllers;
 
-import com.paintprompt.models.GalleryItem;
+import com.paintprompt.database.models.GalleryItem;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;

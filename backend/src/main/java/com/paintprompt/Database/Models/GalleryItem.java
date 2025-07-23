@@ -1,4 +1,4 @@
-package com.paintprompt.models;
+package com.paintprompt.database.models;
 
 public class GalleryItem {
     private String title;
