@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router";
-import { pingBackend } from "../../utils/api";
 
 export default function Welcomepage() {
     const navigate = useNavigate();
