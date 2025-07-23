@@ -102,7 +102,6 @@ const COMPLEXITIES = ["Easy", "Normal", "Hard", "Other..."];
 const FORMATS = ["Landscape", "Portrait", "Square", "Other..."];
 
 const Home: React.FC = () => {
-
     const [isOpen, setIsOpen] = useState(false);
     const [prompt, setPrompt] = useState("");
     const [ratingHover, setRatingHover] = useState(0);
@@ -232,23 +231,22 @@ const Home: React.FC = () => {
     const borderColor = "#E5E7EB";
 
     return (
-        
         <div
-        className="relative flex h-screen overflow-hidden font-sans"
-        style={{
-            backgroundImage: `
+            className="relative flex h-screen overflow-hidden font-sans"
+            style={{
+                backgroundImage: `
                 linear-gradient(45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
                 linear-gradient(-45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
                 #AC83CA
                 `,
-            backgroundSize: "12px 12px",
-            backgroundColor: mainBg,
-            backgroundRepeat: "repeat",
-            color: textColor,
-        }}
+                backgroundSize: "12px 12px",
+                backgroundColor: mainBg,
+                backgroundRepeat: "repeat",
+                color: textColor,
+            }}
         >
-              {/* Prompt Section */}
-            <div className="flex-1 px-16 py-10 transition-all duration-300 relative">   
+            {/* Prompt Section */}
+            <div className="flex-1 px-16 py-10 transition-all duration-300 relative">
                 <div className="max-w-3xl mx-auto min-h-[calc(100vh-120px)] relative">
                     <div className="text-center mb-12 pt-6">
                         <h1 className="text-5xl font-semibold tracking-tight mb-2">
@@ -280,7 +278,6 @@ const Home: React.FC = () => {
                                 background: buttonBg,
                                 color: "#fff",
                                 border: `1px solid ${borderColor}`,
-                                
                             }}
                             onClick={() => {
                                 setShowMoodOptions((prev) => !prev);

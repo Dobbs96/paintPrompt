@@ -6,20 +6,23 @@ export default function ResetPassword() {
     return (
         <div className="min-h-screen flex flex-col">
             <div className="flex-grow flex flex-col items-center px-4 pt-20 space-y-6">
-
-                <h1 className="text-4xl font-bold text-center">Password Reset</h1>
+                <h1 className="text-4xl font-bold text-center">
+                    Password Reset
+                </h1>
                 <p className="text-lg font-medium text-center max-w-md">
-                    Thanks for verifying your email! Please enter your password below.
+                    Thanks for verifying your email! Please enter your password
+                    below.
                 </p>
 
                 <div className="w-full max-w-4xl grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8 items-center">
                     <div className="flex justify-center md:justify-end">
-                        <h2 className="text-3xl font-bold text-right">Set New Password</h2>
+                        <h2 className="text-3xl font-bold text-right">
+                            Set New Password
+                        </h2>
                     </div>
 
                     {/* forms */}
                     <div className="flex flex-col space-y-6">
-
                         {/* new password */}
                         <div className="flex flex-col">
                             <label

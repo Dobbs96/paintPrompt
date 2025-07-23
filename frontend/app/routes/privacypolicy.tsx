@@ -28,11 +28,22 @@ export default function Privacypolicy() {
                         title: "What Data We Collect",
                         content: (
                             <>
-                                <strong>We may collect the following information:</strong>
+                                <strong>
+                                    We may collect the following information:
+                                </strong>
                                 <ul className="list-disc list-inside mt-2 pl-4">
-                                    <li>Name and email address (if you sign up for an account).</li>
-                                    <li>Mood, preferences, and painting-related input.</li>
-                                    <li>Usage data (how you interact with the app).</li>
+                                    <li>
+                                        Name and email address (if you sign up
+                                        for an account).
+                                    </li>
+                                    <li>
+                                        Mood, preferences, and painting-related
+                                        input.
+                                    </li>
+                                    <li>
+                                        Usage data (how you interact with the
+                                        app).
+                                    </li>
                                     <li>Uploaded artwork (if applicable).</li>
                                 </ul>
                             </>
@@ -44,10 +55,19 @@ export default function Privacypolicy() {
                             <>
                                 <strong>We use your information to: </strong>
                                 <ul className="list-disc list-inside mt-2 pl-4">
-                                    <li>Generate personalized painting prompts.</li>
-                                    <li>Save and display your progress gallery.</li>
-                                    <li>Improve our services and user experience.</li>
-                                    <li>Communicate with you when necessary.</li>
+                                    <li>
+                                        Generate personalized painting prompts.
+                                    </li>
+                                    <li>
+                                        Save and display your progress gallery.
+                                    </li>
+                                    <li>
+                                        Improve our services and user
+                                        experience.
+                                    </li>
+                                    <li>
+                                        Communicate with you when necessary.
+                                    </li>
                                 </ul>
                             </>
                         ),
@@ -68,9 +88,20 @@ export default function Privacypolicy() {
                             "We use standard security practices to protect your data. However, no system is completely secure, so we encourage you to use strong passwords and be mindful of the content you share.",
                     },
                 ].map(({ title, content }, index) => (
-                    <div key={index} className="flex flex-col md:flex-row md:items-start gap-6">
-                        <div className="md:w-1/2 text-3xl font-bold">{title}</div>
-                        <div className="md:w-1/2 text-base">{typeof content === "string" ? <p>{content}</p> : content}</div>
+                    <div
+                        key={index}
+                        className="flex flex-col md:flex-row md:items-start gap-6"
+                    >
+                        <div className="md:w-1/2 text-3xl font-bold">
+                            {title}
+                        </div>
+                        <div className="md:w-1/2 text-base">
+                            {typeof content === "string" ? (
+                                <p>{content}</p>
+                            ) : (
+                                content
+                            )}
+                        </div>
                     </div>
                 ))}
             </div>
