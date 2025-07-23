@@ -25,8 +25,9 @@ public class SecurityConfig {
 
     @Bean
     public CorsFilter corsFilter() {
+
         CorsConfiguration config = new CorsConfiguration();
-        config.addAllowedOrigin("http://localhost:5173"); // Vite dev server
+        config.addAllowedOriginPattern("*"); // Allow all origins for development
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
