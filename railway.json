@@ -1,0 +1,9 @@
+{
+    "build": {
+        "builder": "NIXPACKS",
+        "buildCommand": "cd backend && mvn clean install"
+    },
+    "start": {
+        "command": "cd backend && mvn spring-boot:run"
+    }
+}
