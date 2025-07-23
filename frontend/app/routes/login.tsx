@@ -7,33 +7,44 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
-    const handleLogin = async () => {
-        if (!username || !password) {
-            setMessage("Please fill out all fields.");
-            return;
-        }
+    const pingBackend = async () => {
         try {
-            const response = await fetch(
-                "http://localhost:8080/api/auth/login",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ username, password }),
-                }
-            );
-            const result = await response.text();
-            setMessage(result);
-            if (response.ok && result === "Sign in successful!") {
-                localStorage.setItem("username", username);
-                setTimeout(() => navigate("/Home"), 1000);
-            }
+            const response = await fetch("http://localhost:8080/api/ping");
+            const result = await response.text(); // or .json() depending on your backend response
+            setMessage(`Ping successful: ${result}`);
         } catch (error) {
             setMessage("Failed to connect to server.");
             console.error(error);
         }
     };
+
+    // const handleLogin = async () => {
+    //     if (!username || !password) {
+    //         setMessage("Please fill out all fields.");
+    //         return;
+    //     }
+    //     try {
+    //         const response = await fetch(
+    //             "http://localhost:8080/api/auth/login",
+    //             {
+    //                 method: "POST",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 },
+    //                 body: JSON.stringify({ username, password }),
+    //             }
+    //         );
+    //         const result = await response.text();
+    //         setMessage(result);
+    //         if (response.ok && result === "Sign in successful!") {
+    //             localStorage.setItem("username", username);
+    //             setTimeout(() => navigate("/Home"), 1000);
+    //         }
+    //     } catch (error) {
+    //         setMessage("Failed to connect to server.");
+    //         console.error(error);
+    //     }
+    // };
 
     return (
         <div className="min-h-screen flex flex-col justify-center items-center">
@@ -81,7 +92,8 @@ export default function Login() {
                 <button
                     className="font-semibold rounded text-2xl text-white text-xl px-25 py-3"
                     style={{ backgroundColor: "#AC83CA" }}
-                    onClick={handleLogin}
+                    //onClick={handleLogin}
+                    onClick={pingBackend} // test ping
                 >
                     Log In
                 </button>
