@@ -132,12 +132,15 @@ const Home: React.FC = () => {
     //const [password, setPassword] = useState("");
     const [_message, setMessage] = useState("");
     const [materials, setMaterials] = useState<string[]>([]);
+    const [generatedPrompt, setGeneratedPrompt] = useState<string>("");
+    const [loadingPrompt, setLoadingPrompt] = useState(false);
+    const [showPromptError, setShowPromptError] = useState(false);
 
     //const location = useLocation();
 
     const getMaterials = async () => {
         if (!username) {
-            setMessage("Login is Required");
+            // Don't show error in UI, just return
             return;
         }
         try {
@@ -147,7 +150,6 @@ const Home: React.FC = () => {
                 )}`
             );
             const result = await response.text();
-            setMessage(result);
             if (response.ok) {
                 const parsedMaterials = result
                     .split(",")
@@ -155,9 +157,10 @@ const Home: React.FC = () => {
                     .filter(Boolean);
                 setMaterials(parsedMaterials);
             }
+            // Don't setMessage here
         } catch (error) {
+            // Don't setMessage here
             console.error("Error fetching materials:", error);
-            setMessage("Failed to connect to server.");
         }
     };
 
@@ -229,6 +232,42 @@ const Home: React.FC = () => {
     const textColor = "#1A1A1A";
     const secondaryText = "#6B7280";
     const borderColor = "#E5E7EB";
+
+    const generatePrompt = async () => {
+        setShowPromptError(false);
+        if (!username) {
+            setMessage("Login is Required");
+            setShowPromptError(true);
+            return;
+        }
+        setLoadingPrompt(true);
+        setGeneratedPrompt("");
+        setMessage("");
+        try {
+            // Only include params that are set
+            const params = new URLSearchParams();
+            if (selectedMood) params.append("mood", selectedMood);
+            if (selectedMedium) params.append("medium", selectedMedium);
+            if (selectedComplex) params.append("complexity", selectedComplex);
+            if (selectedFormat) params.append("format", selectedFormat);
+            if (prompt) params.append("prompt", prompt);
+            const response = await fetch(
+                `http://localhost:8080/api/prompt/generate?${params.toString()}`
+            );
+            const result = await response.text();
+            if (response.ok) {
+                setGeneratedPrompt(result);
+            } else {
+                setMessage(result || "Failed to generate prompt.");
+                setShowPromptError(true);
+            }
+        } catch (error) {
+            setMessage("Error connecting to server.");
+            setShowPromptError(true);
+        } finally {
+            setLoadingPrompt(false);
+        }
+    };
 
     return (
         <div
@@ -817,7 +856,7 @@ const Home: React.FC = () => {
                     )}
                     <div
                         className={`max-w-xl mx-auto transition-all duration-500 ${
-                            moodOptionsVisible ? "mt-8" : "mt-3"
+                            moodOptionsVisible ? "mt-3" : "mt-3"
                         }`}
                         style={{ zIndex: 1 }}
                     >
@@ -831,15 +870,31 @@ const Home: React.FC = () => {
                             placeholder="Describe your mood or painting idea..."
                             value={prompt}
                             onChange={(e) => setPrompt(e.target.value)}
-                            disabled={showMoodOptions}
+                            disabled={loadingPrompt}
                         />
                         <button
                             className="w-full text-lg py-3 rounded-xl font-medium transition shadow-sm"
                             style={{ background: buttonBg, color: "#fff" }}
-                            disabled={showMoodOptions}
+                            onClick={generatePrompt}
+                            disabled={loadingPrompt}
                         >
-                            Generate Prompt
+                            {loadingPrompt
+                                ? "Generating..."
+                                : "Generate Prompt"}
                         </button>
+                        {generatedPrompt && (
+                            <div className="mt-4 p-4 rounded-xl bg-white text-gray-800 border border-[#AC83CA] shadow">
+                                <div className="font-bold mb-2">
+                                    Generated Prompt:
+                                </div>
+                                <div>{generatedPrompt}</div>
+                            </div>
+                        )}
+                        {showPromptError && _message && (
+                            <div className="mt-2 text-red-600 font-semibold">
+                                {_message}
+                            </div>
+                        )}
                     </div>
 
                     {/* Footer Links*/}
