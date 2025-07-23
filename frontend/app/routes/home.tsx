@@ -102,6 +102,7 @@ const COMPLEXITIES = ["Easy", "Normal", "Hard", "Other..."];
 const FORMATS = ["Landscape", "Portrait", "Square", "Other..."];
 
 const Home: React.FC = () => {
+
     const [isOpen, setIsOpen] = useState(false);
     const [prompt, setPrompt] = useState("");
     const [ratingHover, setRatingHover] = useState(0);
@@ -231,12 +232,23 @@ const Home: React.FC = () => {
     const borderColor = "#E5E7EB";
 
     return (
+        
         <div
-            className="relative flex h-screen overflow-hidden font-sans"
-            style={{ background: mainBg, color: textColor }}
+        className="relative flex h-screen overflow-hidden font-sans"
+        style={{
+            backgroundImage: `
+                linear-gradient(45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+                linear-gradient(-45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+                #AC83CA
+                `,
+            backgroundSize: "12px 12px",
+            backgroundColor: mainBg,
+            backgroundRepeat: "repeat",
+            color: textColor,
+        }}
         >
-            {/* Prompt Section */}
-            <div className="flex-1 px-16 py-10 transition-all duration-300 relative">
+              {/* Prompt Section */}
+            <div className="flex-1 px-16 py-10 transition-all duration-300 relative">   
                 <div className="max-w-3xl mx-auto min-h-[calc(100vh-120px)] relative">
                     <div className="text-center mb-12 pt-6">
                         <h1 className="text-5xl font-semibold tracking-tight mb-2">
@@ -263,11 +275,12 @@ const Home: React.FC = () => {
 
                     <div className="flex justify-center gap-4">
                         <button
-                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition "
                             style={{
                                 background: buttonBg,
                                 color: "#fff",
                                 border: `1px solid ${borderColor}`,
+                                
                             }}
                             onClick={() => {
                                 setShowMoodOptions((prev) => !prev);
@@ -575,7 +588,7 @@ const Home: React.FC = () => {
                                 return complexity !== "Other..." ? (
                                     <button
                                         key={complexity}
-                                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700  ${
                                             isSelected
                                                 ? "border-[#AC83CA] font-bold"
                                                 : "border-gray-300"

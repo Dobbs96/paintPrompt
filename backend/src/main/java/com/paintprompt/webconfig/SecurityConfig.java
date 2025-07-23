@@ -10,11 +10,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .cors()  // <-- This is what you're missing!
+            .cors()  
             .and()
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/**", "/gallery").permitAll()
+                .requestMatchers("/api/**", "/gallery/**", "/uploads/**").permitAll()
                 .anyRequest().authenticated()
             );
         return http.build();

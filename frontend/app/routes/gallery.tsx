@@ -21,30 +21,29 @@ export default function Gallery() {
 
   const handleUpload = async () => {
     if (!uploadTitle || !uploadFile) return;
-
-    const filename = uploadFile.name;
-    const imagePath = `/images/${filename}`; // where it “lives” in public
-
-    await fetch("http://localhost:8080/gallery", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title: uploadTitle,
-        date: new Date().toISOString().split("T")[0],
-        image: imagePath,
-      }),
-    });
-
-    const updatedGallery = await fetch("http://localhost:8080/gallery").then((res) =>
-      res.json()
-    );
-    setArtworks(updatedGallery);
-
-    setUploadTitle("");
-    setUploadFile(null);
+  
+    const formData = new FormData();
+    formData.append("title", uploadTitle);
+    formData.append("file", uploadFile);
+  
+    try {
+      await fetch("http://localhost:8080/gallery/upload", {
+        method: "POST",
+        body: formData,
+      });
+  
+      const updatedGallery = await fetch("http://localhost:8080/gallery").then(res =>
+        res.json()
+      );
+      setArtworks(updatedGallery);
+  
+      setUploadTitle("");
+      setUploadFile(null);
+    } catch (error) {
+      console.error("Upload failed:", error);
+    }
   };
+  
 
   return (
     <div className="p-8 font-sans bg-[#F5F3FF] min-h-screen">
@@ -73,10 +72,10 @@ export default function Gallery() {
               className="border p-4 rounded-lg bg-white shadow-sm"
             >
               <img
-                src={art.image}
-                alt={art.title}
-                className="w-full h-40 object-cover rounded"
-              />
+  src={`http://localhost:8080${art.image}`} // 🔥 POINTS TO BACKEND
+  alt={art.title}
+/>
+
               <h4 className="text-lg font-semibold mt-3">{art.title}</h4>
               <p className="text-sm text-gray-500">Uploaded on {art.date}</p>
               <span className="inline-block mt-1 text-xs bg-gray-100 px-2 py-1 rounded">
