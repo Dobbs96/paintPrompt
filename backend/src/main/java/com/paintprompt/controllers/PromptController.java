@@ -18,11 +18,11 @@ public class PromptController {
 
     @GetMapping("/generate")
     public ResponseEntity<String> generatePrompt(
-            @RequestParam String mood,
-            @RequestParam String medium,
-            @RequestParam String complexity,
-            @RequestParam String format,
-            @RequestParam String prompt) {
+            @RequestParam(required = false) String mood,
+            @RequestParam(required = false) String medium,
+            @RequestParam(required = false) String complexity,
+            @RequestParam(required = false) String format,
+            @RequestParam(required = false) String prompt) {
         try {
             RestTemplate restTemplate = new RestTemplate();
             String url = "https://api.openai.com/v1/chat/completions";
@@ -31,11 +31,21 @@ public class PromptController {
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.setBearerAuth(openaiApiKey);
 
+            StringBuilder content = new StringBuilder();
+            if (prompt != null && !prompt.trim().isEmpty()) {
+                content.append("Generate a creative painting prompt for me.");
+                if (mood != null && !mood.isEmpty()) content.append(" Mood: ").append(mood).append(".");
+                if (medium != null && !medium.isEmpty()) content.append(" Medium: ").append(medium).append(".");
+                if (complexity != null && !complexity.isEmpty()) content.append(" Complexity: ").append(complexity).append(".");
+                if (format != null && !format.isEmpty()) content.append(" Format: ").append(format).append(".");
+                content.append(" My idea: ").append(prompt).append(". Respond with only the prompt.");
+            } else {
+                content.append("Generate a random, simple, and fun drawing prompt for a beginner artist. Respond with only the prompt.");
+            }
+
             Map<String, Object> message = new HashMap<>();
             message.put("role", "user");
-            message.put("content", String.format(
-                "Generate a creative painting prompt for me. Mood: %s, Medium: %s, Complexity: %s, Format: %s. My idea: %s. Respond with only the prompt.",
-                mood, medium, complexity, format, prompt));
+            message.put("content", content.toString());
 
             Map<String, Object> body = new HashMap<>();
             body.put("model", "gpt-3.5-turbo");
