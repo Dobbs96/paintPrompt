@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState } from "react";
+const API_BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 export default function Login() {
     const navigate = useNavigate();
@@ -13,14 +14,11 @@ export default function Login() {
             return;
         }
         try {
-            const response = await fetch(
-                "http://localhost:8080/api/auth/login",
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username, password }),
-                }
-            );
+            const response = await fetch(`${API_BASE}/api/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, password }),
+            });
             const result = await response.text();
             setMessage(result);
             if (response.ok && result === "Sign in successful!") {
