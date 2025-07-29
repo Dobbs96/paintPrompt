@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Gallery() {
     const navigate = useNavigate();
@@ -14,7 +15,7 @@ export default function Gallery() {
     };
 
     useEffect(() => {
-        fetch("http://localhost:8080/gallery")
+        fetch(`${API_BASE}/gallery`)
             .then((res) => res.json())
             .then((data) => setArtworks(data));
     }, []);
@@ -27,14 +28,14 @@ export default function Gallery() {
         formData.append("file", uploadFile);
 
         try {
-            await fetch("http://localhost:8080/gallery/upload", {
+            await fetch("${API_BASE}/gallery/upload", {
                 method: "POST",
                 body: formData,
             });
 
-            const updatedGallery = await fetch(
-                "http://localhost:8080/gallery"
-            ).then((res) => res.json());
+            const updatedGallery = await fetch(`${API_BASE}/gallery`).then(
+                (res) => res.json()
+            );
             setArtworks(updatedGallery);
 
             setUploadTitle("");
