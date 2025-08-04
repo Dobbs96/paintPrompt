@@ -15,7 +15,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/gallery")
-@CrossOrigin(origins = "http://localhost:5173") // or :3000 depending on frontend port
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://paint-prompt.vercel.app",
+    "https://paint-prompt-q0p2k3a0l-friendy-starter.vercel.app/"
+})
+
 public class GalleryController {
 
     private final List<GalleryItem> gallery = new ArrayList<>();
