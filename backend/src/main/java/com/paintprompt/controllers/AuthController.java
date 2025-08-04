@@ -1,6 +1,7 @@
 package com.paintprompt.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.paintprompt.database.models.UserCredential;
@@ -12,12 +13,16 @@ public class AuthController {
 
     @Autowired
     private UserCredentialRepository userRepo;
+    private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
     public String signup(@RequestBody UserCredential user) {
         if (userRepo.existsByUsername(user.getUsername())) {
             return "Username already exists!";
         }
+        // Hash befor cave
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(hashedPassword);
 
         userRepo.save(user);
         return "User registered successfully!";
@@ -29,9 +34,13 @@ public class AuthController {
         if (existingUser == null) {
             return "User not found!";
         }
-        if (!existingUser.getPassword().equals(user.getPassword())) {
+        // hash passwor match?
+        if (!passwordEncoder.matches(user.getPassword(), existingUser.getPassword())) {
             return "Incorrect password!";
         }
+        // if (!existingUser.getPassword().equals(user.getPassword())) {
+        //     return "Incorrect password!";
+        // }
         return "Sign in successful!";
     }
 }
