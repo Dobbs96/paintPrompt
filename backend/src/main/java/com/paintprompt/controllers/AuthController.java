@@ -13,6 +13,8 @@ public class AuthController {
 
     @Autowired
     private UserCredentialRepository userRepo;
+
+    @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
     @PostMapping("/signup")
