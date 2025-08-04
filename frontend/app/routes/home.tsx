@@ -1111,74 +1111,31 @@ const Home: React.FC = () => {
                         </p>
                         {communityImages.map((img, idx) => {
                             const isLast = idx === communityImages.length - 1;
+                            // Compose S3 URL from imagePath
+                            const s3Url = `https://paintprompt.s3.us-east-2.amazonaws.com/${img.imagePath}`;
                             return (
                                 <div
                                     className="mb-6 community-image-card"
                                     key={img.username + img.imagePath}
-                                    ref={
-                                        isLast
-                                            ? lastCommunityImageRef
-                                            : undefined
-                                    }
+                                    ref={isLast ? lastCommunityImageRef : undefined}
                                 >
-                                    <div
-                                        className="p-2 rounded-lg img-container"
-                                        style={{ background: "#fff" }}
-                                    >
+                                    <div className="p-2 rounded-lg img-container" style={{ background: "#fff" }}>
                                         <img
-                                            src={`/user_images/${img.imagePath}`}
+                                            src={s3Url}
                                             alt={img.title}
                                             className="w-full h-auto rounded-lg"
-                                            style={{
-                                                width: "100%",
-                                                height: 220,
-                                                objectFit: "cover",
-                                                borderRadius: 8,
-                                            }}
-                                            onError={(e) =>
-                                                (e.currentTarget.style.display =
-                                                    "none")
-                                            }
+                                            style={{ width: "100%", height: 220, objectFit: "cover", borderRadius: 8 }}
+                                            onError={e => (e.currentTarget.style.display = "none")}
                                         />
                                     </div>
-                                    <div
-                                        className="img-title"
-                                        style={{
-                                            fontWeight: 600,
-                                            margin: "8px 0 4px 0",
-                                        }}
-                                    >
-                                        {img.title}
-                                    </div>
-                                    <div
-                                        className="img-rating"
-                                        style={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                        }}
-                                    >
+                                    <div className="img-title" style={{ fontWeight: 600, margin: "8px 0 4px 0" }}>{img.title}</div>
+                                    <div className="img-rating" style={{ display: "flex", alignItems: "center" }}>
                                         <StarRating
                                             value={img.avgRating}
-                                            onChange={(rating) =>
-                                                handleCommunityRate(
-                                                    img.username,
-                                                    img.imagePath,
-                                                    rating
-                                                )
-                                            }
+                                            onChange={rating => handleCommunityRate(img.username, img.imagePath, rating)}
                                             disabled={img.username === username}
                                         />
-                                        <span
-                                            className="rating-count"
-                                            style={{
-                                                marginLeft: 8,
-                                                color: "#888",
-                                            }}
-                                        >
-                                            {img.ratingCount > 0
-                                                ? `(${img.ratingCount})`
-                                                : ""}
-                                        </span>
+                                        <span className="rating-count" style={{ marginLeft: 8, color: "#888" }}>{img.ratingCount > 0 ? `(${img.ratingCount})` : ""}</span>
                                     </div>
                                 </div>
                             );
