@@ -28,7 +28,7 @@ export default function Gallery() {
         formData.append("file", uploadFile);
 
         try {
-            await fetch("${API_BASE}/gallery/upload", {
+            await fetch(`${API_BASE}/gallery/upload`, {
                 method: "POST",
                 body: formData,
             });
