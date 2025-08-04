@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router";
 
 interface Material {
     name: string;
@@ -7,6 +8,7 @@ interface Material {
 }
 
 export default function Materials() {
+    const navigate = useNavigate();
     const [search, setSearch] = useState("");
     const [materials, setMaterials] = useState<Material[]>([
         {
@@ -50,9 +52,22 @@ export default function Materials() {
         m.name.toLowerCase().includes(search.toLowerCase())
     );
 
+    const buttonStyle = {
+        background: "#AC83CA",
+        color: "#fff",
+        border: "1px solid #E5E7EB",
+    };
+
     return (
         <div className="p-8 max-w-5xl mx-auto">
             {/* Header */}
+            <button
+                onClick={() => navigate("/home")}
+                className="mb-4 px-4 py-2 rounded-full font-semibold text-white shadow"
+                style={buttonStyle}
+            >
+                ← Back to Home
+            </button>
             <h1 className="text-3xl font-bold mb-2 text-center">
                 My Materials Inventory
             </h1>
