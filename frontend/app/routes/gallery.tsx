@@ -77,7 +77,7 @@ export default function Gallery() {
                             className="border p-4 rounded-lg bg-white shadow-sm"
                         >
                             <img
-                                src={`http://localhost:8080${art.image}`} // 🔥 POINTS TO BACKEND
+                                src={`${API_BASE}${art.image}`} // 🔥 POINTS TO BACKEND
                                 alt={art.title}
                             />
 
