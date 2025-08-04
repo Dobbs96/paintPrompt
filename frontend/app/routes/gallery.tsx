@@ -17,7 +17,8 @@ export default function Gallery() {
     useEffect(() => {
         fetch(`${API_BASE}/gallery`)
             .then((res) => res.json())
-            .then((data) => setArtworks(data));
+            .then((data) => setArtworks(data))
+            .catch((err) => console.error("Error loading gallery:", err)); //catch to see if this is error
     }, []);
 
     const handleUpload = async () => {
@@ -77,7 +78,9 @@ export default function Gallery() {
                             className="border p-4 rounded-lg bg-white shadow-sm"
                         >
                             <img
-                                src={`${API_BASE}${art.image}`} // 🔥 POINTS TO BACKEND
+                                src={`${API_BASE}${
+                                    art.image.startsWith("/") ? "" : "/"
+                                }${art.image}`} // 🔥 POINTS TO BACKEND made cleaner
                                 alt={art.title}
                             />
 
