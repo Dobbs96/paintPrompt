@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
+//for future thought: remove category? introduce emoji that users can change?
 interface Material {
     name: string;
     category: string;
@@ -9,39 +11,113 @@ interface Material {
 
 export default function Materials() {
     const navigate = useNavigate();
-    const [search, setSearch] = useState("");
-    const [materials, setMaterials] = useState<Material[]>([
-        {
-            name: "Acrylic Paint",
-            category: "Paint",
-            icon: "🎨",
-        },
-        {
-            name: "Synthetic Brush",
-            category: "Brushes",
-            icon: "🖌️",
-        },
-        {
-            name: "Canvas Pad",
-            category: "Surfaces",
-            icon: "🪵",
-        },
-    ]);
 
+    const [username, setUsername] = useState<string | null>(null);
+
+    const [search, setSearch] = useState("");
+    const [materials, setMaterials] = useState<Material[]>([]);
     const [newMaterial, setNewMaterial] = useState("");
 
-    const handleAddMaterial = () => {
-        if (!newMaterial.trim()) return;
+    // new - fetch materials
+    const getMaterials = async () => {
+        if (!username) return;
+        try {
+            const response = await fetch(
+                `${API_BASE}/api/user/get/materials?username=${encodeURIComponent(
+                    username
+                )}`
+            );
 
-        setMaterials([
-            ...materials,
-            {
-                name: newMaterial.trim(),
-                category: "Uncategorized",
-                icon: "➕",
-            },
-        ]);
-        setNewMaterial("");
+            const result = await response.text();
+            if (response.ok) {
+                const parsedMaterials = result
+                    .split(",")
+                    .map((m) => m.trim())
+                    .filter(Boolean)
+                    .map((name) => ({
+                        name,
+                        category: "Uncategorized",
+                        icon: "📦",
+                    }));
+                setMaterials(parsedMaterials);
+            }
+        } catch (error) {
+            console.error("Error fetching materials:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            setUsername(localStorage.getItem("username"));
+        }
+    }, []);
+
+    useEffect(() => {
+        getMaterials();
+    }, [username]);
+
+    const handleAddMaterial = async () => {
+        if (!newMaterial.trim() || !username) return;
+
+        const newEntry = {
+            name: newMaterial.trim(),
+            category: "Uncategorized",
+            icon: "➕",
+        };
+
+        try {
+            const response = await fetch(`${API_BASE}/api/user/add/material`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username,
+                    material: newEntry.name,
+                }),
+            });
+
+            if (response.ok) {
+                setMaterials([...materials, newEntry]);
+                setNewMaterial("");
+            } else {
+                console.error("Failed to add material");
+            }
+        } catch (error) {
+            console.error("Error adding material:", error);
+        }
+    };
+
+    const handleDeleteMaterial = async (materialName: string) => {
+        if (!username) return;
+
+        try {
+            const response = await fetch(
+                `${API_BASE}/api/user/delete/material`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username,
+                        material: materialName,
+                    }),
+                }
+            );
+
+            if (response.ok) {
+                // remove from local state
+                const updated = materials.filter(
+                    (m) => m.name !== materialName
+                );
+                setMaterials(updated);
+            } else {
+                console.error("Failed to delete material");
+            }
+        } catch (error) {
+            console.error("Error deleting material:", error);
+        }
     };
 
     const handleCancel = () => {
@@ -60,6 +136,15 @@ export default function Materials() {
 
     return (
         <div className="p-8 max-w-5xl mx-auto">
+            <div className="flex justify-center mb-6">
+                <button
+                    className="bg-[#AC83CA] hover:bg-[#946888] text-white text-lg sm:text-xl font-semibold px-6 py-3 rounded-lg"
+                    onClick={() => navigate("/Home")}
+                >
+                    Back
+                </button>
+            </div>
+
             {/* Header */}
             <button
                 onClick={() => navigate("/home")}
@@ -94,8 +179,19 @@ export default function Materials() {
                 {filtered.map((material, index) => (
                     <div
                         key={index}
-                        className="flex flex-col items-center p-4 border rounded-lg shadow-sm"
+                        className="flex flex-col items-center p-4 border rounded-lg shadow-sm relative"
                     >
+                        <button
+                            onClick={() => {
+                                if (confirm(`Delete "${material.name}"?`)) {
+                                    handleDeleteMaterial(material.name);
+                                }
+                            }}
+                            className="absolute top-2 right-2 text-red-500 hover:text-red-700"
+                            title="Delete"
+                        >
+                            ❌
+                        </button>
                         <div className="text-4xl mb-2">{material.icon}</div>
                         <h3 className="font-bold">{material.name}</h3>
                         <p className="text-sm text-gray-500">
