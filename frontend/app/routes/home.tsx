@@ -326,7 +326,7 @@ const Home: React.FC = () => {
     };
 
     // Color palette to match the rest of the app
-    const mainBg = "#F5F3FF"; // light purple
+    // const mainBg = "#F5F3FF"; // light purple
     const cardBg = "#AC83CA"; // main accent
     const buttonBg = "#AC83CA";
     //const buttonHover = "#8B5FBF";
