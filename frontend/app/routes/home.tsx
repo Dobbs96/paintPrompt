@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 //import { useLocation } from "react-router";
 
 const RAINBOW_COLORS = [
@@ -145,7 +146,7 @@ const Home: React.FC = () => {
         }
         try {
             const response = await fetch(
-                `http://localhost:8080/api/user/get/materials?username=${encodeURIComponent(
+                `${API_BASE}/api/user/get/materials?username=${encodeURIComponent(
                     username
                 )}`
             );
@@ -250,7 +251,7 @@ const Home: React.FC = () => {
             username,
         });
         fetch(
-            `http://localhost:8080/api/community-ratings/images?currentUser=${encodeURIComponent(
+            `${API_BASE}/api/community-ratings/images?currentUser=${encodeURIComponent(
                 username ?? ""
             )}&page=${communityPage}&size=10`
         )
@@ -273,7 +274,7 @@ const Home: React.FC = () => {
     ) => {
         try {
             await fetch(
-                `http://localhost:8080/api/community-ratings/rate?currentUser=${encodeURIComponent(
+                `${API_BASE}/api/community-ratings/rate?currentUser=${encodeURIComponent(
                     username ?? ""
                 )}`,
                 {
@@ -325,7 +326,7 @@ const Home: React.FC = () => {
     };
 
     // Color palette to match the rest of the app
-    const mainBg = "#F5F3FF"; // light purple
+    // const mainBg = "#F5F3FF"; // light purple
     const cardBg = "#AC83CA"; // main accent
     const buttonBg = "#AC83CA";
     //const buttonHover = "#8B5FBF";
@@ -352,7 +353,7 @@ const Home: React.FC = () => {
             if (selectedFormat) params.append("format", selectedFormat);
             if (prompt) params.append("prompt", prompt);
             const response = await fetch(
-                `http://localhost:8080/api/prompt/generate?${params.toString()}`
+                `${API_BASE}/api/prompt/generate?${params.toString()}`
             );
             const result = await response.text();
             if (response.ok) {
@@ -373,16 +374,14 @@ const Home: React.FC = () => {
         <div
             className="relative flex h-screen overflow-hidden font-sans"
             style={{
-                backgroundImage: `
-                linear-gradient(45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(-45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-                #AC83CA
-                `,
-                backgroundSize: "12px 12px",
-                backgroundColor: mainBg,
-                backgroundRepeat: "repeat",
+                backgroundImage: "url('/user_images/paint-texture.jpg')",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundBlendMode: "normal", // ← simplified
                 color: textColor,
-            }}
+              }}
+
         >
             {/* Prompt Section */}
             <div className="flex-1 px-16 py-10 transition-all duration-300 relative">
