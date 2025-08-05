@@ -1,6 +1,9 @@
 import { useNavigate } from "react-router";
 import { useState } from "react";
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
+//const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const API_BASE = "http://localhost:8080"
+
 
 export default function Login() {
     const navigate = useNavigate();
