@@ -19,6 +19,7 @@
 //     }
 // }
 
+
 package com.paintprompt.webconfig;
 
 import org.springframework.context.annotation.Bean;
