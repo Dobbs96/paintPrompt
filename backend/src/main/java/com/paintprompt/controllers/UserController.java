@@ -6,9 +6,14 @@ import org.springframework.web.bind.annotation.*;
 import com.paintprompt.database.models.UserData;
 import com.paintprompt.database.repositories.UserDataRepository;
 
-@CrossOrigin(origins = "http://localhost:5173")
+
 @RestController
 @RequestMapping("/api/user")
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://paint-prompt.vercel.app",
+    "https://paint-prompt-q0p2k3a0l-friendy-starter.vercel.app"
+})
 public class UserController {
     @Autowired
     private UserDataRepository userDataRepository;
