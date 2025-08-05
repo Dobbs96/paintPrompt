@@ -1048,32 +1048,30 @@ const Home: React.FC = () => {
 
             {/* Top Right Links */}
             <div
-                className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
-                    isOpen ? "right-64" : "right-8"
-                } pr-6 space-x-6`}
-            >
-                <a
-                    onClick={() => navigate("/gallery")}
-                    className="hover:underline cursor-pointer"
-                    style={{ color: buttonBg }}
-                >
-                    Gallery
-                </a>
-                <a
-                    onClick={() => navigate("/materials")}
-                    className="hover:underline cursor-pointer"
-                    style={{ color: buttonBg }}
-                >
-                    Materials
-                </a>
-                <a
-                    onClick={() => navigate("/")}
-                    className="hover:underline cursor-pointer"
-                    style={{ color: "#E11D48" }}
-                >
-                    Sign Out
-                </a>
-            </div>
+  className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
+    isOpen ? "right-64" : "right-8"
+  } pr-6 space-x-4`}
+>
+  <a
+    onClick={() => navigate("/gallery")}
+    className="px-3 py-1 rounded-full text-white font-medium bg-pink-300 hover:bg-pink-400 transition-all shadow-sm cursor-pointer"
+  >
+    Gallery
+  </a>
+  <a
+    onClick={() => navigate("/materials")}
+    className="px-3 py-1 rounded-full text-white font-medium bg-purple-300 hover:bg-purple-400 transition-all shadow-sm cursor-pointer"
+  >
+    Materials
+  </a>
+  <a
+    onClick={() => navigate("/")}
+    className="px-3 py-1 rounded-full text-white font-medium bg-red-400 hover:bg-red-500 transition-all shadow-sm cursor-pointer"
+  >
+    Sign Out
+  </a>
+</div>
+
 
             {/* Sidebar */}
             <div
