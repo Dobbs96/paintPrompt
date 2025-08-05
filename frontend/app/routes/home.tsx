@@ -374,16 +374,14 @@ const Home: React.FC = () => {
         <div
             className="relative flex h-screen overflow-hidden font-sans"
             style={{
-                backgroundImage: `
-                linear-gradient(45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(-45deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-                #AC83CA
-                `,
-                backgroundSize: "12px 12px",
-                backgroundColor: mainBg,
-                backgroundRepeat: "repeat",
+                backgroundImage: "url('/user_images/paint-texture.jpg')",
+                backgroundSize: "cover",
+                backgroundRepeat: "no-repeat",
+                backgroundPosition: "center",
+                backgroundBlendMode: "normal", // ← simplified
                 color: textColor,
-            }}
+              }}
+
         >
             {/* Prompt Section */}
             <div className="flex-1 px-16 py-10 transition-all duration-300 relative">
