@@ -44,7 +44,48 @@ export default function Gallery() {
             console.error("Upload failed:", error);
         }
     };
-
+    const handlePublish = async () => {
+        if (!uploadTitle || !uploadFile) return;
+    
+        const username = localStorage.getItem("username"); // or however you store it
+        if (!username) {
+            alert("User not logged in");
+            return;
+        }
+    
+        const formData = new FormData();
+        formData.append("file", uploadFile);
+        formData.append("username", username);
+    
+        try {
+            const response = await fetch(`${API_BASE}/api/community-ratings/upload-image`, {
+                method: "POST",
+                body: formData,
+                headers: {
+                    published: "true",
+                    title: uploadTitle,
+                },
+            });
+    
+            if (response.ok) {
+                console.log("✅ Image published successfully.");
+                setUploadTitle("");
+                setUploadFile(null);
+                navigate("/community-ratings"); // update route if needed
+            } else {
+                const errorText = await response.text();
+                console.error("❌ Upload failed:", errorText);
+    
+                if (response.status === 401) alert("Auth error – backend issue");
+                else if (response.status === 404) alert("User not found – frontend issue");
+                else alert("Something went wrong: " + errorText);
+            }
+        } catch (err) {
+            console.error("🔥 Publish error:", err);
+            alert("Network or server error");
+        }
+    };
+    
     return (
         <div className="p-8 font-sans bg-[#F5F3FF] min-h-screen">
             <button
@@ -125,12 +166,13 @@ export default function Gallery() {
                             Upload
                         </button>
                         <button
-                            onClick={handleUpload}
-                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
-                            style={buttonStyle}
-                        >
+                    onClick={handlePublish}
+                        className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+                    style={buttonStyle}
+                                >
                             Publish
-                        </button>
+                            </button>
+
                     </div>
                 </div>
             </section>
