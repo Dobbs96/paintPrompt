@@ -16,7 +16,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/gallery")
-@CrossOrigin(origins = "http://localhost:5173") // adjust as needed
+@CrossOrigin(origins = {
+    "http://localhost:5173",
+    "https://paint-prompt.vercel.app",
+    "https://paint-prompt-q0p2k3a0l-friendy-starter.vercel.app"
+})
+
 public class GalleryController {
 
     @Autowired

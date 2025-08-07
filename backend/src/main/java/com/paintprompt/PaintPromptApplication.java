@@ -19,5 +19,7 @@ public class PaintPromptApplication {
 		new File("uploads").mkdirs();
 
 	}
+
+
 }
 
