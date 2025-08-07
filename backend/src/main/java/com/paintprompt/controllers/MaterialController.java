@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 
     @RestController
-    @RequestMapping("/api/user")
+    @RequestMapping("/api/materials")
     @CrossOrigin(origins = {
     "http://localhost:5173",
     "https://paint-prompt.vercel.app",
