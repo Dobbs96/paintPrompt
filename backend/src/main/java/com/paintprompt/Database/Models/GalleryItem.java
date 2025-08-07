@@ -1,9 +1,18 @@
 package com.paintprompt.database.models;
 
+import jakarta.persistence.*;
+
+@Entity
 public class GalleryItem {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String title;
     private String date;
     private String image;
+    private String username;
 
     public GalleryItem() {}
 
@@ -11,6 +20,18 @@ public class GalleryItem {
         this.title = title;
         this.date = date;
         this.image = image;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getTitle() {

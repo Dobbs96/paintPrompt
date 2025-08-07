@@ -134,6 +134,7 @@ export default function Gallery() {
   alt={art.title}
   className="w-full h-48 object-cover rounded-lg border border-gray-300 mb-3"
 />
+
             <h4 className="text-lg font-semibold capitalize">{art.title || "Untitled"}</h4>
             <p className="text-sm text-gray-500">Uploaded on {art.date}</p>
             <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full mt-1 inline-block">
