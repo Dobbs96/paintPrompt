@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+//const API_BASE = import.meta.env.VITE_API_BASE_URL;
 //import { useLocation } from "react-router";
+const API_BASE = "http://localhost:8080";
 
 const RAINBOW_COLORS = [
     "#FF0000", // Red
@@ -380,8 +381,7 @@ const Home: React.FC = () => {
                 backgroundPosition: "center",
                 backgroundBlendMode: "normal", // ← simplified
                 color: textColor,
-              }}
-
+            }}
         >
             {/* Prompt Section */}
             <div className="flex-1 px-16 py-10 transition-all duration-300 relative">
@@ -1048,30 +1048,29 @@ const Home: React.FC = () => {
 
             {/* Top Right Links */}
             <div
-  className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
-    isOpen ? "right-64" : "right-8"
-  } pr-6 space-x-4`}
->
-  <a
-    onClick={() => navigate("/gallery")}
-    className="px-3 py-1 rounded-full text-white font-medium bg-pink-300 hover:bg-pink-400 transition-all shadow-sm cursor-pointer"
-  >
-    Gallery
-  </a>
-  <a
-    onClick={() => navigate("/materials")}
-    className="px-3 py-1 rounded-full text-white font-medium bg-purple-300 hover:bg-purple-400 transition-all shadow-sm cursor-pointer"
-  >
-    Materials
-  </a>
-  <a
-    onClick={() => navigate("/")}
-    className="px-3 py-1 rounded-full text-white font-medium bg-red-400 hover:bg-red-500 transition-all shadow-sm cursor-pointer"
-  >
-    Sign Out
-  </a>
-</div>
-
+                className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
+                    isOpen ? "right-64" : "right-8"
+                } pr-6 space-x-4`}
+            >
+                <a
+                    onClick={() => navigate("/gallery")}
+                    className="px-3 py-1 rounded-full text-white font-medium bg-pink-300 hover:bg-pink-400 transition-all shadow-sm cursor-pointer"
+                >
+                    Gallery
+                </a>
+                <a
+                    onClick={() => navigate("/materials")}
+                    className="px-3 py-1 rounded-full text-white font-medium bg-purple-300 hover:bg-purple-400 transition-all shadow-sm cursor-pointer"
+                >
+                    Materials
+                </a>
+                <a
+                    onClick={() => navigate("/")}
+                    className="px-3 py-1 rounded-full text-white font-medium bg-red-400 hover:bg-red-500 transition-all shadow-sm cursor-pointer"
+                >
+                    Sign Out
+                </a>
+            </div>
 
             {/* Sidebar */}
             <div
@@ -1114,25 +1113,70 @@ const Home: React.FC = () => {
                                 <div
                                     className="mb-6 community-image-card"
                                     key={img.username + img.imagePath}
-                                    ref={isLast ? lastCommunityImageRef : undefined}
+                                    ref={
+                                        isLast
+                                            ? lastCommunityImageRef
+                                            : undefined
+                                    }
                                 >
-                                    <div className="p-2 rounded-lg img-container" style={{ background: "#fff" }}>
+                                    <div
+                                        className="p-2 rounded-lg img-container"
+                                        style={{ background: "#fff" }}
+                                    >
                                         <img
                                             src={s3Url}
                                             alt={img.title}
                                             className="w-full h-auto rounded-lg"
-                                            style={{ width: "100%", height: 220, objectFit: "cover", borderRadius: 8 }}
-                                            onError={e => (e.currentTarget.style.display = "none")}
+                                            style={{
+                                                width: "100%",
+                                                height: 220,
+                                                objectFit: "cover",
+                                                borderRadius: 8,
+                                            }}
+                                            onError={(e) =>
+                                                (e.currentTarget.style.display =
+                                                    "none")
+                                            }
                                         />
                                     </div>
-                                    <div className="img-title" style={{ fontWeight: 600, margin: "8px 0 4px 0" }}>{img.title}</div>
-                                    <div className="img-rating" style={{ display: "flex", alignItems: "center" }}>
+                                    <div
+                                        className="img-title"
+                                        style={{
+                                            fontWeight: 600,
+                                            margin: "8px 0 4px 0",
+                                        }}
+                                    >
+                                        {img.title}
+                                    </div>
+                                    <div
+                                        className="img-rating"
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                        }}
+                                    >
                                         <StarRating
                                             value={img.avgRating}
-                                            onChange={rating => handleCommunityRate(img.username, img.imagePath, rating)}
+                                            onChange={(rating) =>
+                                                handleCommunityRate(
+                                                    img.username,
+                                                    img.imagePath,
+                                                    rating
+                                                )
+                                            }
                                             disabled={img.username === username}
                                         />
-                                        <span className="rating-count" style={{ marginLeft: 8, color: "#888" }}>{img.ratingCount > 0 ? `(${img.ratingCount})` : ""}</span>
+                                        <span
+                                            className="rating-count"
+                                            style={{
+                                                marginLeft: 8,
+                                                color: "#888",
+                                            }}
+                                        >
+                                            {img.ratingCount > 0
+                                                ? `(${img.ratingCount})`
+                                                : ""}
+                                        </span>
                                     </div>
                                 </div>
                             );
