@@ -45,6 +45,13 @@ export default function Gallery() {
                 console.log("✅ Image uploaded successfully.");
                 setUploadTitle("");
                 setUploadFile(null);
+                // Refresh the artworks by fetching them again
+                const username = localStorage.getItem("username");
+                fetch(
+                    `${API_BASE}/api/gallery/user-images?currentUser=${username}`
+                )
+                    .then((res) => res.json())
+                    .then((data) => setArtworks(data));
             } else {
                 const errorText = await response.text();
                 console.error("❌ Upload failed:", errorText);
@@ -91,6 +98,13 @@ export default function Gallery() {
                 console.log("✅ Image published successfully.");
                 setUploadTitle("");
                 setUploadFile(null);
+                // Refresh the artworks by fetching them again
+                const username = localStorage.getItem("username");
+                fetch(
+                    `${API_BASE}/api/gallery/user-images?currentUser=${username}`
+                )
+                    .then((res) => res.json())
+                    .then((data) => setArtworks(data));
             } else {
                 const errorText = await response.text();
                 console.error("❌ Upload failed:", errorText);
