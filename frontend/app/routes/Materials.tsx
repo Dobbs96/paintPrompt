@@ -23,10 +23,9 @@ export default function Materials() {
         if (!username) return;
         try {
             const response = await fetch(
-                `${API_BASE}/api/materials/get/materials?username=${encodeURIComponent(
+                `${API_BASE}/api/user/get/materials?username=${encodeURIComponent(
                     username
-                )}`,
-                { method: "GET" }
+                )}`
             );
 
             const result = await response.text();
@@ -67,19 +66,16 @@ export default function Materials() {
         };
 
         try {
-            const response = await fetch(
-                `${API_BASE}/api/materials/add/material`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        username,
-                        material: newEntry.name,
-                    }),
-                }
-            );
+            const response = await fetch(`${API_BASE}/api/user/add/material`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    username,
+                    material: newEntry.name,
+                }),
+            });
 
             if (response.ok) {
                 setMaterials([...materials, newEntry]);
@@ -97,7 +93,7 @@ export default function Materials() {
 
         try {
             const response = await fetch(
-                `${API_BASE}/api/materials/delete/material`,
+                `${API_BASE}/api/user/delete/material`,
                 {
                     method: "POST",
                     headers: {
