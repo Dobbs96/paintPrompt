@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-const API_BASE = "http://localhost:8080";
+//const API_BASE = "http://localhost:8080";
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Gallery() {
     const navigate = useNavigate();
