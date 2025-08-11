@@ -120,12 +120,14 @@ export default function Signup() {
             {/* footer links */}
             <footer className="mt-12 text-sm sm:text-base text-gray-600 font-medium flex flex-wrap justify-center gap-6 text-center">
                 <p>© 2023 Paint Prompt. All rights reserved</p>
+                {/* 
                 <button onClick={() => navigate("/privacypolicy")}>
                     Privacy Policy
                 </button>
                 <button onClick={() => navigate("/termsandservice")}>
                     Terms and Service
                 </button>
+                */}
             </footer>
         </div>
     );

@@ -35,6 +35,7 @@ export default function Welcomepage() {
                     © 2023 Paint Prompt. All rights reserved
                 </p>
 
+                {/* }
                 <button
                     className="text-sm sm:text-base font-medium"
                     onClick={() => navigate("/privacypolicy")}
@@ -48,6 +49,7 @@ export default function Welcomepage() {
                 >
                     Terms and Service
                 </button>
+                */ }
             </div>
         </div>
     );

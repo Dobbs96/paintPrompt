@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 //for future thought: remove category? introduce emoji that users can change?
 interface Material {
     name: string;
-    category: string;
     icon: string;
 }
 
@@ -36,7 +35,6 @@ export default function Materials() {
                     .filter(Boolean)
                     .map((name) => ({
                         name,
-                        category: "Uncategorized",
                         icon: "📦",
                     }));
                 setMaterials(parsedMaterials);
@@ -63,7 +61,6 @@ export default function Materials() {
 
         const newEntry = {
             name: newMaterial.trim(),
-            category: "Uncategorized",
             icon: "➕",
         };
 
@@ -148,13 +145,7 @@ export default function Materials() {
             </div>
 
             {/* Header */}
-            <button
-                onClick={() => navigate("/home")}
-                className="mb-4 px-4 py-2 rounded-full font-semibold text-white shadow"
-                style={buttonStyle}
-            >
-                ← Back to Home
-            </button>
+
             <h1 className="text-3xl font-bold mb-2 text-center">
                 My Materials Inventory
             </h1>
@@ -197,9 +188,6 @@ export default function Materials() {
                         </button>
                         <div className="text-4xl mb-2">{material.icon}</div>
                         <h3 className="font-bold">{material.name}</h3>
-                        <p className="text-sm text-gray-500">
-                            Category: {material.category}
-                        </p>
                     </div>
                 ))}
             </div>

@@ -4,6 +4,7 @@ export default function ForgotPassword() {
 
   const navigate = useNavigate();
 
+  {/* this page is no longer accessible (at least shouldnt be) */}
   return (
     <div className="flex flex-col justify-start items-center h-screen text-center px-4 pt-20 space-y-6">
 

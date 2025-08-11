@@ -1,67 +1,45 @@
 package com.paintprompt.controllers;
 
-import com.paintprompt.database.models.GalleryItem;
-import com.paintprompt.database.repositories.GalleryRepository;
+import com.paintprompt.database.models.UserData;
+import com.paintprompt.database.repositories.UserDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @RestController
-@RequestMapping("/gallery")
-@CrossOrigin(origins = "http://localhost:5173") // adjust as needed
 public class GalleryController {
-
     @Autowired
-    private GalleryRepository galleryRepository;
+    private UserDataRepository userDataRepository;
 
-    private static final String UPLOAD_DIR = "uploads/";
+    @Value("${aws.s3.urlPrefix}")
+    private String s3UrlPrefix;
 
-    @GetMapping
-    public List<GalleryItem> getGallery(@RequestParam String username) {
-        return galleryRepository.findByUsername(username);
-    }
-
-    @PostMapping("/upload")
-    public ResponseEntity<String> handleImageUpload(
-            @RequestParam("title") String title,
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("username") String username
-    ) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("No file selected");
+    // Returns current user's images, titles, and upload timestamps from DB with S3 URLs
+    @GetMapping("/api/gallery/user-images")
+    public ResponseEntity<List<Map<String, String>>> getUserImages(@RequestParam String currentUser) {
+        UserData user = userDataRepository.findByUsername(currentUser);
+        if (user == null) {
+            return ResponseEntity.status(404).body(null);
         }
-
-        try {
-            // Create uploads folder if it doesn't exist
-            File uploadDir = new File(UPLOAD_DIR);
-            if (!uploadDir.exists()) {
-                uploadDir.mkdirs();
-            }
-
-            // Save the file
-            Path filepath = Paths.get(UPLOAD_DIR, file.getOriginalFilename());
-            System.out.println("Saving image to: " + filepath.toAbsolutePath());
-            Files.write(filepath, file.getBytes());
-
-            // Create new gallery item and save to DB
-            GalleryItem newItem = new GalleryItem();
-            newItem.setTitle(title);
-            newItem.setDate(java.time.LocalDate.now().toString());
-            newItem.setImage(file.getOriginalFilename()); // just the filename
-            newItem.setUsername(username);
-            galleryRepository.save(newItem);
-
-            return ResponseEntity.ok("File uploaded successfully");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("Failed to upload: " + e.getMessage());
+        String[] paths = user.getImage_paths() != null ? user.getImage_paths().split(",") : new String[0];
+        String[] titles = user.getTitles() != null ? user.getTitles().split(",") : new String[0];
+        String[] uploadTs = user.getUpload_ts() != null ? user.getUpload_ts().split(",") : new String[0];
+        List<Map<String, String>> result = new ArrayList<>();
+        for (int i = 0; i < paths.length; i++) {
+            Map<String, String> item = new HashMap<>();
+            String path = paths[i].trim();
+            item.put("image", s3UrlPrefix + path);
+            item.put("title", i < titles.length ? titles[i].trim() : "");
+            item.put("upload_ts", i < uploadTs.length ? uploadTs[i].trim() : "");
+            result.add(item);
         }
+        return ResponseEntity.ok(result);
     }
 }

@@ -82,7 +82,7 @@ export default function HelpPage() {
                     <div className="space-y-6">
                         {/* Email Contact */}
                         <div className="flex">
-                            <div className="text-3xl mr-4 mt-2">📧</div>
+                            <div className="text-5xl mr-4 mt-2">📧</div>
                             <div>
                                 <h3 className="text-lg font-semibold">
                                     E-Mail Us
@@ -94,6 +94,7 @@ export default function HelpPage() {
                         </div>
 
                         {/* Phone Contact */}
+                        {/* he mentioned to remove the number if it's not legitament}
                         <div className="flex">
                             <div className="text-3xl mr-4  mt-2">📞</div>
                             <div>
@@ -105,6 +106,7 @@ export default function HelpPage() {
                                 </p>
                             </div>
                         </div>
+                        */}
                     </div>
                 </div>
             </div>

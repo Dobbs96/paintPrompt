@@ -2,6 +2,8 @@ import { useNavigate } from "react-router";
 
 export default function ResetPassword() {
     const navigate = useNavigate();
+    
+  {/* this page is no longer accessible (at least shouldnt be) */}
 
     return (
         <div className="min-h-screen flex flex-col">
