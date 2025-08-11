@@ -123,12 +123,6 @@ export default function Materials() {
         m.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const buttonStyle = {
-        background: "#AC83CA",
-        color: "#fff",
-        border: "1px solid #E5E7EB",
-    };
-
     return (
 
         

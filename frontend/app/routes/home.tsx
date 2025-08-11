@@ -514,8 +514,6 @@ const Home: React.FC = () => {
                                     </button>
                                 );
                             })}
-
-                            {/* 
                             <div
                                 key="other"
                                 className="flex flex-col items-center"
@@ -583,9 +581,8 @@ const Home: React.FC = () => {
                                         }}
                                     />
                                 )}
-                            </div>  */}
+                            </div>
                         </div>
-
                     )}
 
                     {/* Format Options Animation - now directly below with a small gap */}
@@ -601,8 +598,6 @@ const Home: React.FC = () => {
                             {FORMATS.map((format) => {
                                 const isSelected = selectedFormat === format;
                                 return format !== "Other..." ? (
-
-                                    
                                     <button
                                         key={format}
                                         className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
@@ -633,10 +628,7 @@ const Home: React.FC = () => {
                                         className="flex flex-col items-center"
                                         style={{ margin: "0 0.1rem" }}
                                     >
-                                        {/*
-
                                         {!customFormat && (
-                                            
                                             <button
                                                 className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
                                                     selectedFormat &&
@@ -654,8 +646,6 @@ const Home: React.FC = () => {
                                                 Other...
                                             </button>
                                         )}
-                                            */}
-                                            
                                         {customFormat === "typing" && (
                                             <input
                                                 autoFocus
@@ -756,16 +746,12 @@ const Home: React.FC = () => {
                                         {complexity}
                                     </button>
                                 ) : (
-
-                                    
                                     <div
                                         key="other"
                                         className="flex flex-col items-center"
                                         style={{ margin: "0 0.1rem" }}
                                     >
-                                        {/*}
                                         {!customComplex && (
-                                            
                                             <button
                                                 className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
                                                     selectedComplex &&
@@ -783,7 +769,6 @@ const Home: React.FC = () => {
                                                 Other...
                                             </button>
                                         )}
-                                            */}
                                         {customComplex === "typing" && (
                                             <input
                                                 autoFocus
