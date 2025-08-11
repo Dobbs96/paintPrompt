@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const API_BASE = "http://localhost:8080";
 
 export default function Gallery() {
     const navigate = useNavigate();
@@ -10,10 +10,9 @@ export default function Gallery() {
 
     useEffect(() => {
         const username = localStorage.getItem("username");
-        fetch(`${API_BASE}/gallery?username=${username}`)
+        fetch(`${API_BASE}/api/gallery/user-images?currentUser=${username}`)
             .then((res) => res.json())
-            .then((data) => setArtworks(data))
-            .catch((err) => console.error("Error loading gallery:", err)); //catch to see if this is error
+            .then((data) => setArtworks(data));
     }, []);
 
     const handleUpload = async () => {
@@ -26,25 +25,38 @@ export default function Gallery() {
         }
 
         const formData = new FormData();
-        formData.append("title", uploadTitle);
         formData.append("file", uploadFile);
         formData.append("username", username);
 
         try {
-            await fetch(`${API_BASE}/gallery/upload`, {
-                method: "POST",
-                body: formData,
-            });
+            const response = await fetch(
+                `${API_BASE}/api/community-ratings/upload-image`,
+                {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        title: uploadTitle,
+                    },
+                }
+            );
 
-            const updatedGallery = await fetch(
-                `${API_BASE}/gallery?username=${username}`
-            ).then((res) => res.json());
-            setArtworks(updatedGallery);
+            if (response.ok) {
+                console.log("✅ Image uploaded successfully.");
+                setUploadTitle("");
+                setUploadFile(null);
+            } else {
+                const errorText = await response.text();
+                console.error("❌ Upload failed:", errorText);
 
-            setUploadTitle("");
-            setUploadFile(null);
-        } catch (error) {
-            console.error("Upload failed:", error);
+                if (response.status === 401)
+                    alert("Auth error – backend issue");
+                else if (response.status === 404)
+                    alert("User not found – frontend issue");
+                else alert("Something went wrong: " + errorText);
+            }
+        } catch (err) {
+            console.error("🔥 Publish error:", err);
+            alert("Network or server error");
         }
     };
 
@@ -78,7 +90,6 @@ export default function Gallery() {
                 console.log("✅ Image published successfully.");
                 setUploadTitle("");
                 setUploadFile(null);
-                navigate("/community-ratings");
             } else {
                 const errorText = await response.text();
                 console.error("❌ Upload failed:", errorText);
@@ -145,6 +156,7 @@ export default function Gallery() {
                                     alt={art.title}
                                     className="w-full h-48 object-cover rounded-lg border border-gray-300 mb-3"
                                 />
+
                                 <h4 className="text-lg font-semibold capitalize">
                                     {art.title || "Untitled"}
                                 </h4>

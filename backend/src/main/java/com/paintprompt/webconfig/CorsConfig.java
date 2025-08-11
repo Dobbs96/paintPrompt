@@ -16,7 +16,10 @@ public class CorsConfig {
                     .allowedOrigins(
                         "http://localhost:5173",                    
                         "https://paint-prompt.vercel.app",          
-                        "https://paint-prompt-q0p2k3a0l-friendy-starter.vercel.app/" 
+                        "https://paint-prompt-50d116ssa-friendy-starter.vercel.app/"
+                        //"https://paint-prompt-q0p2k3a0l-friendy-starter.vercel.app/" 
+
+                        
                     )
                     .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                     .allowedHeaders("*")
