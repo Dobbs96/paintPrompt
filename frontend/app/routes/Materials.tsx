@@ -25,7 +25,8 @@ export default function Materials() {
             const response = await fetch(
                 `${API_BASE}/api/materials/get/materials?username=${encodeURIComponent(
                     username
-                )}`
+                )}`,
+                { method: "GET" }
             );
 
             const result = await response.text();
