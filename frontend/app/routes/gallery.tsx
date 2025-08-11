@@ -7,6 +7,21 @@ export default function Gallery() {
   const [uploadTitle, setUploadTitle] = useState("");
   const [uploadFile, setUploadFile] = useState<File | null>(null);
   const [artworks, setArtworks] = useState<any[]>([]);
+  const [uploadSelected, setUploadSelected] = useState(false);
+  const [publishSelected, setPublishSelected] = useState(false);
+
+  function formatDate(d?: string | number | null) {
+    if (!d && d !== 0) return "—";
+    const dt = new Date(d as any);
+    if (isNaN(dt.getTime())) return String(d);
+    return dt.toLocaleString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 
   useEffect(() => {
     const username = localStorage.getItem("username");
@@ -106,21 +121,25 @@ export default function Gallery() {
 
   return (
     <div className="p-6 sm:p-8 font-sans bg-[#F5F3FF] min-h-screen">
-      {/* Top Bar */}
-      <div className="flex items-center justify-between mb-6">
-        <button
-          onClick={() => navigate("/home")}
-          className="text-purple-600 border border-purple-300 px-4 py-2 rounded-md hover:bg-purple-50 transition"
-        >
-          ← Back to Home
-        </button>
-      </div>
+      {/* Header (with back button inside, gradient lavender) */}
+<header className="rounded-lg mb-8 shadow bg-gradient-to-r from-[#E9D5FF] via-[#D8B4FE] to-[#C4B5FD]">
+  <div className="grid grid-cols-3 items-center p-6 sm:p-8">
+    <button
+      onClick={() => navigate("/home")}
+      className="justify-self-start text-purple-800 border border-purple-300 px-4 py-2 rounded-md hover:bg-white/60 transition"
+    >
+      ← Back to Home
+    </button>
 
-      {/* Header */}
-      <header className="bg-pink-300 text-white text-center p-8 rounded-lg mb-8 shadow">
-        <h1 className="text-3xl font-bold mb-2">Your Painting Journey</h1>
-        <p className="text-lg">Explore your artistic growth and creativity.</p>
-      </header>
+    <div className="text-center">
+      <h1 className="text-3xl font-bold mb-1 text-purple-900">Your Painting Journey</h1>
+      <p className="text-lg text-purple-900/70">Explore your artistic growth and creativity.</p>
+    </div>
+
+    <div />
+  </div>
+</header>
+
 
       {/* Gallery */}
       <section className="mb-16 text-center">
@@ -153,7 +172,7 @@ export default function Gallery() {
                 <h4 className="text-lg font-semibold capitalize">
                   {art.title || "Untitled"}
                 </h4>
-                <p className="text-sm text-gray-500">Uploaded on {art.date}</p>
+                <p className="text-sm text-gray-500">Uploaded on {formatDate(art.date ?? art.upload_ts)}</p>
                 <span className="text-xs bg-purple-100 text-purple-600 px-2 py-0.5 rounded-full mt-1 inline-block">
                   You
                 </span>
@@ -163,43 +182,83 @@ export default function Gallery() {
         </div>
       </section>
 
-      {/* Upload Form */}
-      <section className="mb-20 text-center">
-        <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-xl shadow-md p-6">
-          <h3 className="text-xl font-semibold mb-2">Upload Artwork</h3>
-          <p className="text-gray-600 mb-4">
-            Add your latest masterpiece to the collection.
-          </p>
+  {/* Upload Form */}
+<section className="mb-20 text-center">
+  <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-xl shadow-md p-6">
+    {/* TOP: Upload / Publish toggles */}
+    <div className="flex items-center justify-center gap-3 mb-4">
+      <button
+        type="button"
+        onClick={() => setUploadSelected(!uploadSelected)}
+        className={
+          "px-5 py-2 rounded-full border transition " +
+          (uploadSelected
+            ? "bg-purple-600 text-white border-purple-700"
+            : "bg-white text-purple-700 border-purple-300 hover:bg-purple-50")
+        }
+      >
+        Upload
+      </button>
+      <button
+        type="button"
+        onClick={() => setPublishSelected(!publishSelected)}
+        className={
+          "px-5 py-2 rounded-full border transition " +
+          (publishSelected
+            ? "bg-purple-300 text-purple-900 border-purple-400"
+            : "bg-white text-purple-900 border-purple-200 hover:bg-purple-50")
+        }
+      >
+        Publish
+      </button>
+    </div>
 
-          <input
-            type="text"
-            placeholder="Artwork Title"
-            className="w-full border border-gray-300 px-4 py-2 rounded mb-3"
-            value={uploadTitle}
-            onChange={(e) => setUploadTitle(e.target.value)}
-          />
-          <input
-            type="file"
-            accept="image/*"
-            className="w-full border border-gray-300 px-4 py-2 rounded mb-4"
-            onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
-          />
-          <div className="flex gap-4 justify-center">
-            <button
-              onClick={handleUpload}
-              className="px-6 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition"
-            >
-              Upload
-            </button>
-            <button
-              onClick={handlePublish}
-              className="px-6 py-2 bg-purple-300 text-purple-800 rounded hover:bg-purple-400 transition"
-            >
-              Publish
-            </button>
-          </div>
-        </div>
-      </section>
+    {/* TITLE under the buttons */}
+    <h3 className="text-xl font-semibold mb-1">Your Artwork</h3>
+    <p className="text-gray-600 mb-4">
+      Add your latest masterpiece to the collection.
+    </p>
+
+    {/* Inputs */}
+    <input
+      type="text"
+      placeholder="Artwork Title"
+      className="w-full border border-gray-300 px-4 py-2 rounded mb-3"
+      value={uploadTitle}
+      onChange={(e) => setUploadTitle(e.target.value)}
+    />
+
+    <input
+      type="file"
+      accept="image/*"
+      className="w-full border border-gray-300 px-4 py-2 rounded mb-6"
+      onChange={(e) => setUploadFile(e.target.files?.[0] || null)}
+    />
+
+    {/* Submit button at the bottom */}
+    <button
+      onClick={() => {
+        if (publishSelected) {
+          handlePublish();   // publish overrides upload
+        } else if (uploadSelected) {
+          handleUpload();
+        }
+      }}
+      disabled={
+        !uploadTitle || !uploadFile || (!uploadSelected && !publishSelected)
+      }
+      className={
+        "w-full px-6 py-3 rounded-lg transition " +
+        (uploadTitle && uploadFile && (uploadSelected || publishSelected)
+          ? "bg-black text-white hover:opacity-90"
+          : "bg-gray-200 text-gray-500 cursor-not-allowed")
+      }
+    >
+      Submit
+    </button>
+  </div>
+</section>
+
 
       {/* Footer */}
       <footer className="border-t pt-4 text-sm text-center text-gray-500 flex justify-center gap-6">
