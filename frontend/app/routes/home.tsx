@@ -28,34 +28,38 @@ function RainbowText({
     const [rainbowStart, setRainbowStart] = useState(0);
     const rainbowLength = 6; // Number of letters to show rainbow at a time
     const steps = text.length + rainbowLength; // allow rainbow to fully exit
+
     useEffect(() => {
-        let rainbowTimeout: NodeJS.Timeout;
-        let rainbowInterval: NodeJS.Timeout;
-        let colorInterval: NodeJS.Timeout;
+        let rainbowTimeout: ReturnType<typeof setTimeout>;
+        let rainbowInterval: ReturnType<typeof setInterval>;
+        let colorInterval: ReturnType<typeof setInterval>;
+
         function startRainbow() {
             setRainbow(true);
             setRainbowStart(0);
-            let i = 0;
             colorInterval = setInterval(() => {
                 setRainbowStart((prev) => prev + 1);
-                i++;
             }, rainbowDuration / steps);
+
             rainbowTimeout = setTimeout(() => {
                 setRainbow(false);
                 setRainbowStart(0);
                 clearInterval(colorInterval);
             }, rainbowDuration);
         }
+
         startRainbow();
         rainbowInterval = setInterval(() => {
             startRainbow();
         }, interval + rainbowDuration);
+
         return () => {
             clearInterval(rainbowInterval);
             clearTimeout(rainbowTimeout);
             clearInterval(colorInterval);
         };
     }, [text, rainbowDuration, interval, steps]);
+
     return (
         <span style={{ color: rainbow ? undefined : "#000" }}>
             {text.split("").map((char, i) => {
@@ -99,30 +103,27 @@ const MOODS = [
     "Surprise Me",
     "Other...",
 ];
-
 const COMPLEXITIES = ["Easy", "Normal", "Hard", "Other..."];
-
 const FORMATS = ["Landscape", "Portrait", "Square", "Other..."];
 
 const Home: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [prompt, setPrompt] = useState("");
-    //const [ratingHover, setRatingHover] = useState(0);
 
     const [showMoodOptions, setShowMoodOptions] = useState(false);
-    const [moodOptionsVisible, setMoodOptionsVisible] = useState(false); // for fade-out
+    const [moodOptionsVisible, setMoodOptionsVisible] = useState(false);
     const [selectedMood, setSelectedMood] = useState("");
     const [customMood, setCustomMood] = useState("");
 
     const navigate = useNavigate();
 
     const [showComplexOptions, setShowComplexOptions] = useState(false);
-    const [complexOptionsVisible, setComplexOptionsVisible] = useState(false); // fade out
+    const [complexOptionsVisible, setComplexOptionsVisible] = useState(false);
     const [selectedComplex, setSelectedComplex] = useState("");
     const [customComplex, setCustomComplex] = useState("");
 
     const [showFormatOptions, setShowFormatOptions] = useState(false);
-    const [formatOptionsVisible, setFormatOptionsVisible] = useState(false); // fade out
+    const [formatOptionsVisible, setFormatOptionsVisible] = useState(false);
     const [selectedFormat, setSelectedFormat] = useState("");
     const [customFormat, setCustomFormat] = useState("");
 
@@ -132,20 +133,25 @@ const Home: React.FC = () => {
     const [customMedium, setCustomMedium] = useState("");
 
     const [username, setUsername] = useState<string | null>(null);
-    //const [password, setPassword] = useState("");
     const [_message, setMessage] = useState("");
     const [materials, setMaterials] = useState<string[]>([]);
     const [generatedPrompt, setGeneratedPrompt] = useState<string>("");
     const [loadingPrompt, setLoadingPrompt] = useState(false);
     const [showPromptError, setShowPromptError] = useState(false);
 
-    //const location = useLocation();
+    // NEW: missing lightbox state
+    const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+
+    // Community Ratings State
+    const [communityImages, setCommunityImages] = useState<any[]>([]);
+    const [communityPage, setCommunityPage] = useState(0);
+    const [communityHasMore, setCommunityHasMore] = useState(true);
+    const [communityLoading, setCommunityLoading] = useState(false);
+    const [communityError, setCommunityError] = useState("");
+    const communityObserver = React.useRef<IntersectionObserver | null>(null);
 
     const getMaterials = async () => {
-        if (!username) {
-            // Don't show error in UI, just return
-            return;
-        }
+        if (!username) return;
         try {
             const token = localStorage.getItem("token");
             const response = await fetch(
@@ -158,16 +164,13 @@ const Home: React.FC = () => {
                         : undefined,
                 }
             );
+
             if (response.status === 401) {
-                let errorJson = null;
+                let errorJson: any = null;
                 try {
                     errorJson = await response.json();
                 } catch {}
-                if (
-                    errorJson &&
-                    errorJson.error &&
-                    errorJson.error.toLowerCase().includes("session")
-                ) {
+                if (errorJson?.error?.toLowerCase?.().includes("session")) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("username");
                     setUsername(null);
@@ -176,6 +179,7 @@ const Home: React.FC = () => {
                     return;
                 }
             }
+
             const result = await response.text();
             if (response.ok) {
                 const parsedMaterials = result
@@ -184,9 +188,7 @@ const Home: React.FC = () => {
                     .filter(Boolean);
                 setMaterials(parsedMaterials);
             }
-            // Don't setMessage here
         } catch (error) {
-            // Don't setMessage here
             console.error("Error fetching materials:", error);
         }
     };
@@ -199,66 +201,20 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         getMaterials();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [username]);
 
     useEffect(() => {
-        if (showMoodOptions) {
-            setMoodOptionsVisible(true);
-        } else {
-            // If mood options are closed without selection (no fade-out), hide immediately
-            setMoodOptionsVisible(false);
-        }
-
-        if (showComplexOptions) {
-            setComplexOptionsVisible(true);
-        } else {
-            setComplexOptionsVisible(false);
-        }
-
-        if (showFormatOptions) {
-            setFormatOptionsVisible(true);
-        } else {
-            setFormatOptionsVisible(false);
-        }
-
-        if (showMediumOptions) {
-            setMediumOptionsVisible(true);
-        } else {
-            setMediumOptionsVisible(false);
-        }
+        setMoodOptionsVisible(showMoodOptions);
+        setComplexOptionsVisible(showComplexOptions);
+        setFormatOptionsVisible(showFormatOptions);
+        setMediumOptionsVisible(showMediumOptions);
     }, [
         showMoodOptions,
         showComplexOptions,
         showFormatOptions,
         showMediumOptions,
     ]);
-
-    // Community Ratings State
-    const [communityImages, setCommunityImages] = useState<any[]>([]);
-    const [communityPage, setCommunityPage] = useState(0);
-    const [communityHasMore, setCommunityHasMore] = useState(true);
-    const [communityLoading, setCommunityLoading] = useState(false);
-    const [communityError, setCommunityError] = useState("");
-    const communityObserver = React.useRef<IntersectionObserver | null>(null);
-
-    // Reset community images and page when sidebar is opened
-    useEffect(() => {
-        if (isOpen) {
-            setCommunityImages([]);
-            setCommunityPage(0);
-            setCommunityHasMore(true);
-            setCommunityError("");
-        }
-    }, [isOpen]);
-    // Reset community images and page when sidebar is opened
-    useEffect(() => {
-        if (isOpen) {
-            setCommunityImages([]);
-            setCommunityPage(0);
-            setCommunityHasMore(true);
-            setCommunityError("");
-        }
-    }, [isOpen]);
 
     // Close lightbox on Escape key
     useEffect(() => {
@@ -291,11 +247,8 @@ const Home: React.FC = () => {
         if (!isOpen || !username) return;
         setCommunityLoading(true);
         setCommunityError("");
-        console.log("Fetching community images", {
-            page: communityPage,
-            username,
-        });
         const token = localStorage.getItem("token");
+
         fetch(
             `${API_BASE}/api/community-ratings/images?currentUser=${encodeURIComponent(
                 username ?? ""
@@ -308,15 +261,11 @@ const Home: React.FC = () => {
         )
             .then(async (res) => {
                 if (res.status === 401) {
-                    let errorJson = null;
+                    let errorJson: any = null;
                     try {
                         errorJson = await res.json();
                     } catch {}
-                    if (
-                        errorJson &&
-                        errorJson.error &&
-                        errorJson.error.toLowerCase().includes("session")
-                    ) {
+                    if (errorJson?.error?.toLowerCase?.().includes("session")) {
                         localStorage.removeItem("token");
                         localStorage.removeItem("username");
                         setUsername(null);
@@ -361,16 +310,13 @@ const Home: React.FC = () => {
                     body: JSON.stringify({ targetUsername, imagePath, rating }),
                 }
             );
+
             if (response.status === 401) {
-                let errorJson = null;
+                let errorJson: any = null;
                 try {
                     errorJson = await response.json();
                 } catch {}
-                if (
-                    errorJson &&
-                    errorJson.error &&
-                    errorJson.error.toLowerCase().includes("session")
-                ) {
+                if (errorJson?.error?.toLowerCase?.().includes("session")) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("username");
                     setUsername(null);
@@ -378,6 +324,7 @@ const Home: React.FC = () => {
                     return;
                 }
             }
+
             let newAvg = rating;
             let newCount = 1;
             try {
@@ -387,6 +334,7 @@ const Home: React.FC = () => {
                 if (typeof data?.ratingCount === "number")
                     newCount = data.ratingCount;
             } catch {}
+
             setCommunityImages((prev) =>
                 prev.map((img) =>
                     img.imagePath === imagePath &&
@@ -400,7 +348,7 @@ const Home: React.FC = () => {
         }
     };
 
-    // StarRating component for ratings UI
+    // StarRating component
     const StarRating: React.FC<{
         value: number;
         onChange: (v: number) => void;
@@ -426,17 +374,15 @@ const Home: React.FC = () => {
                         onMouseEnter={() => !disabled && setHover(star)}
                         onMouseLeave={() => setHover(0)}
                         onClick={() => !disabled && onChange(star)}
-                    ></span>
+                    />
                 ))}
             </div>
         );
     };
 
-    // Color palette to match the rest of the app
-    // const mainBg = "#F5F3FF"; // light purple
-    const cardBg = "#AC83CA"; // main accent
+    // Colors
+    const cardBg = "#AC83CA";
     const buttonBg = "#AC83CA";
-    //const buttonHover = "#8B5FBF";
     const textColor = "#1A1A1A";
     const secondaryText = "#6B7280";
     const borderColor = "#E5E7EB";
@@ -452,13 +398,13 @@ const Home: React.FC = () => {
         setGeneratedPrompt("");
         setMessage("");
         try {
-            // Only include params that are set
             const params = new URLSearchParams();
             if (selectedMood) params.append("mood", selectedMood);
             if (selectedMedium) params.append("medium", selectedMedium);
             if (selectedComplex) params.append("complexity", selectedComplex);
             if (selectedFormat) params.append("format", selectedFormat);
             if (prompt) params.append("prompt", prompt);
+
             const token = localStorage.getItem("token");
             const response = await fetch(
                 `${API_BASE}/api/prompt/generate?${params.toString()}`,
@@ -468,17 +414,13 @@ const Home: React.FC = () => {
                         : undefined,
                 }
             );
+
             if (response.status === 401) {
-                // Try to parse JSON error
-                let errorJson = null;
+                let errorJson: any = null;
                 try {
                     errorJson = await response.json();
                 } catch {}
-                if (
-                    errorJson &&
-                    errorJson.error &&
-                    errorJson.error.toLowerCase().includes("session")
-                ) {
+                if (errorJson?.error?.toLowerCase?.().includes("session")) {
                     localStorage.removeItem("token");
                     localStorage.removeItem("username");
                     setUsername(null);
@@ -487,6 +429,7 @@ const Home: React.FC = () => {
                     return;
                 }
             }
+
             const result = await response.text();
             if (response.ok) {
                 setGeneratedPrompt(result);
@@ -494,7 +437,7 @@ const Home: React.FC = () => {
                 setMessage(result || "Failed to generate prompt.");
                 setShowPromptError(true);
             }
-        } catch (error) {
+        } catch {
             setMessage("Error connecting to server.");
             setShowPromptError(true);
         } finally {
@@ -508,6 +451,7 @@ const Home: React.FC = () => {
             style={{ background: "#fff", color: textColor, zIndex: 1 }}
         >
             <ArtBackground />
+
             {/* Prompt Section */}
             <div className="flex-1 px-16 py-10 transition-all duration-300 relative">
                 <div className="max-w-3xl mx-auto min-h-[calc(100vh-120px)] relative">
@@ -536,7 +480,7 @@ const Home: React.FC = () => {
 
                     <div className="flex justify-center gap-4">
                         <button
-                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition "
+                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
                             style={{
                                 background: buttonBg,
                                 color: "#fff",
@@ -601,114 +545,7 @@ const Home: React.FC = () => {
                         </button>
                     </div>
 
-                    {mediumOptionVisible && (
-                        <div
-                            className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
-                                showMediumOptions
-                                    ? "opacity-100"
-                                    : "opacity-0 pointer-events-none"
-                            }`}
-                            style={{ zIndex: 2 }}
-                        >
-                            {materials.slice(0, 6).map((medium) => {
-                                const isSelected = selectedMedium === medium;
-                                return (
-                                    <button
-                                        key={medium}
-                                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
-                                            isSelected
-                                                ? "border-[#AC83CA] font-bold"
-                                                : "border-gray-300"
-                                        }`}
-                                        style={{ margin: "0 0.1rem" }}
-                                        onClick={() => {
-                                            setSelectedMedium(medium);
-                                            setTimeout(() => {
-                                                setShowMediumOptions(false);
-                                                setTimeout(
-                                                    () =>
-                                                        setMediumOptionsVisible(
-                                                            false
-                                                        ),
-                                                    500
-                                                );
-                                            }, 1000);
-                                        }}
-                                    >
-                                        {medium}
-                                    </button>
-                                );
-                            })}
-                            <div
-                                key="other"
-                                className="flex flex-col items-center"
-                                style={{ margin: "0 0.1rem" }}
-                            >
-                                {!customMedium && (
-                                    <button
-                                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
-                                            selectedMedium &&
-                                            !materials.includes(selectedMedium)
-                                                ? "border-[#AC83CA] font-bold"
-                                                : "border-gray-300"
-                                        }`}
-                                        onClick={() =>
-                                            setCustomMedium("typing")
-                                        }
-                                        style={{ minWidth: 0 }}
-                                    >
-                                        Other...
-                                    </button>
-                                )}
-                                {customMedium === "typing" && (
-                                    <input
-                                        autoFocus
-                                        className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
-                                        style={{ minWidth: 80, maxWidth: 160 }}
-                                        placeholder="Other..."
-                                        value={selectedMedium}
-                                        onChange={(e) =>
-                                            setSelectedMedium(e.target.value)
-                                        }
-                                        onBlur={() => {
-                                            if (selectedMedium.trim()) {
-                                                setTimeout(() => {
-                                                    setShowMediumOptions(false);
-                                                    setTimeout(
-                                                        () =>
-                                                            setMediumOptionsVisible(
-                                                                false
-                                                            ),
-                                                        500
-                                                    );
-                                                }, 1000);
-                                            }
-                                            setCustomMedium("");
-                                        }}
-                                        onKeyDown={(e) => {
-                                            if (e.key === "Enter") {
-                                                if (selectedMedium.trim()) {
-                                                    setTimeout(() => {
-                                                        setShowMediumOptions(
-                                                            false
-                                                        );
-                                                        setTimeout(
-                                                            () =>
-                                                                setMediumOptionsVisible(
-                                                                    false
-                                                                ),
-                                                            500
-                                                        );
-                                                    }, 1000);
-                                                }
-                                                setCustomMedium("");
-                                            }
-                                        }}
-                                    />
-                                )}
-                            </div>
-                        </div>
-                    )}
+                    {/* Medium Options (deduped) */}
                     {mediumOptionVisible && (
                         <div
                             className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
@@ -721,8 +558,10 @@ const Home: React.FC = () => {
                             {materials.slice(0, 6).map((medium) => {
                                 const isSelected = selectedMedium === medium;
                                 const label =
-                                    typeof medium === "string" && medium.length > 0
-                                        ? medium.charAt(0).toUpperCase() + medium.slice(1)
+                                    typeof medium === "string" &&
+                                    medium.length > 0
+                                        ? medium.charAt(0).toUpperCase() +
+                                          medium.slice(1)
                                         : medium;
                                 return (
                                     <button
@@ -822,7 +661,7 @@ const Home: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Format Options Animation - now directly below with a small gap */}
+                    {/* Format Options */}
                     {formatOptionsVisible && (
                         <div
                             className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
@@ -853,7 +692,7 @@ const Home: React.FC = () => {
                                                             false
                                                         ),
                                                     500
-                                                ); // match fade duration
+                                                );
                                             }, 1000);
                                         }}
                                     >
@@ -944,7 +783,7 @@ const Home: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Complex Options Animation - now directly below with a small gap */}
+                    {/* Complexity Options */}
                     {complexOptionsVisible && (
                         <div
                             className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
@@ -976,7 +815,7 @@ const Home: React.FC = () => {
                                                             false
                                                         ),
                                                     500
-                                                ); // match fade duration
+                                                );
                                             }, 1000);
                                         }}
                                     >
@@ -1069,7 +908,7 @@ const Home: React.FC = () => {
                         </div>
                     )}
 
-                    {/* Mood Options Animation - now directly below with a small gap */}
+                    {/* Mood Options */}
                     {moodOptionsVisible && (
                         <div
                             className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
@@ -1100,7 +939,7 @@ const Home: React.FC = () => {
                                                             false
                                                         ),
                                                     500
-                                                ); // match fade duration
+                                                );
                                             }, 1000);
                                         }}
                                     >
@@ -1190,10 +1029,10 @@ const Home: React.FC = () => {
                             })}
                         </div>
                     )}
+
+                    {/* Prompt + Output */}
                     <div
-                        className={`max-w-xl mx-auto transition-all duration-500 ${
-                            moodOptionsVisible ? "mt-3" : "mt-3"
-                        }`}
+                        className="max-w-xl mx-auto transition-all duration-500 mt-3"
                         style={{ zIndex: 1 }}
                     >
                         <textarea
@@ -1233,7 +1072,7 @@ const Home: React.FC = () => {
                         )}
                     </div>
 
-                    {/* Footer Links*/}
+                    {/* Footer Links */}
                     <div
                         className="absolute bottom-0 left-0 right-0 flex justify-center space-x-6 text-sm"
                         style={{ color: secondaryText }}
@@ -1283,7 +1122,7 @@ const Home: React.FC = () => {
                 {isOpen ? "🡢" : "🡠"}
             </button>
 
-            {/* Top Right Links */}
+            {/* Top Right Links (single) */}
             <div
                 className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
                     isOpen ? "right-64" : "right-8"
@@ -1293,7 +1132,7 @@ const Home: React.FC = () => {
                     onClick={() => navigate("/gallery")}
                     className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
                     style={{
-                        background: "#AC83CA", // main purple
+                        background: "#AC83CA",
                         color: "#fff",
                         border: "1px solid #E5E7EB",
                     }}
@@ -1346,70 +1185,8 @@ const Home: React.FC = () => {
                     Sign Out
                 </a>
             </div>
-            {/* Top Right Links */}
-            <div
-                className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
-                    isOpen ? "right-64" : "right-8"
-                } pr-6 space-x-4`}
-            >
-                <a
-                    onClick={() => navigate("/gallery")}
-                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
-                    style={{
-                        background: "#AC83CA", // main purple
-                        color: "#fff",
-                        border: "1px solid #E5E7EB",
-                    }}
-                    onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "#8B5FBF")
-                    }
-                    onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "#AC83CA")
-                    }
-                >
-                    Gallery
-                </a>
-                <a
-                    onClick={() => navigate("/materials")}
-                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
-                    style={{
-                        background: "#AC83CA",
-                        color: "#fff",
-                        border: "1px solid #E5E7EB",
-                    }}
-                    onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "#8B5FBF")
-                    }
-                    onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "#AC83CA")
-                    }
-                >
-                    Materials
-                </a>
-                <a
-                    onClick={() => {
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("username");
-                        navigate("/");
-                    }}
-                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
-                    style={{
-                        background: "#AC83CA",
-                        color: "#fff",
-                        border: "1px solid #E5E7EB",
-                    }}
-                    onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "#8B5FBF")
-                    }
-                    onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "#AC83CA")
-                    }
-                >
-                    Sign Out
-                </a>
-            </div>
 
-            {/* Sidebar */}
+            {/* Sidebar (single) */}
             <div
                 id="sidebar"
                 className={`relative ${
@@ -1444,158 +1221,6 @@ const Home: React.FC = () => {
                         </p>
                         {communityImages.map((img, idx) => {
                             const isLast = idx === communityImages.length - 1;
-                            // Compose S3 URL from imagePath
-                            const s3Url = `https://paintprompt.s3.us-east-2.amazonaws.com/${img.imagePath}`;
-                            return (
-                                <div
-                                    className="mb-6 community-image-card"
-                                    key={img.username + img.imagePath}
-                                    ref={
-                                        isLast
-                                            ? lastCommunityImageRef
-                                            : undefined
-                                    }
-                                >
-                                    <div
-                                        className="p-2 rounded-lg img-container"
-                                        style={{ background: "#fff" }}
-                                    >
-                                        <img
-                                            src={s3Url}
-                                            alt={img.title}
-                                            className="w-full h-auto rounded-lg"
-                                            style={{
-                                                width: "100%",
-                                                height: 220,
-                                                objectFit: "cover",
-                                                borderRadius: 8,
-                                            }}
-                                            onError={(e) =>
-                                                (e.currentTarget.style.display =
-                                                    "none")
-                                            }
-                                        />
-                                    </div>
-                                    <div
-                                        className="img-title"
-                                        style={{
-                                            fontWeight: 600,
-                                            margin: "8px 0 4px 0",
-                                            textAlign: "center",
-                                        }}
-                                    >
-                                        {img.title}
-                                    </div>
-                                    <div
-                                        className="img-rating"
-                                        style={{
-                                            display: "flex",
-                                            flexDirection: "column",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <StarRating
-                                            value={img.avgRating}
-                                            onChange={(rating) =>
-                                                handleCommunityRate(
-                                                    img.username,
-                                                    img.imagePath,
-                                                    rating
-                                                )
-                                            }
-                                            disabled={img.username === username}
-                                        />
-                                        <span
-                                            className="rating-count"
-                                            style={{
-                                                marginTop: 4,
-                                                color: "#AAA",
-                                                fontWeight: 500,
-                                            }}
-                                        >
-                                            {img.ratingCount > 0
-                                                ? `(${img.ratingCount})`
-                                                : ""}
-                                        </span>
-                                    </div>
-                                </div>
-                            );
-                        })}
-                        {communityLoading && (
-                            <div
-                                className="loading"
-                                style={{
-                                    textAlign: "center",
-                                    margin: "16px 0",
-                                }}
-                            >
-                                Loading...
-                            </div>
-                        )}
-                        {communityError && (
-                            <div
-                                className="error"
-                                style={{
-                                    textAlign: "center",
-                                    margin: "16px 0",
-                                }}
-                            >
-                                {communityError}
-                            </div>
-                        )}
-                        {!communityHasMore && !communityLoading && (
-                            <div
-                                className="end"
-                                style={{
-                                    textAlign: "center",
-                                    margin: "16px 0",
-                                }}
-                            >
-                                No more images
-                            </div>
-                        )}
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
-            {/* Sidebar */}
-            <div
-                id="sidebar"
-                className={`relative ${
-                    isOpen ? "w-64" : "w-8"
-                } transition-all duration-300`}
-                style={{
-                    background: cardBg,
-                    borderLeft: `1px solid ${borderColor}`,
-                }}
-            >
-                <div className="flex flex-col h-full p-4">
-                    <div
-                        className={`absolute top-0 right-0 w-64 p-4 h-full overflow-y-auto border-l transition-all duration-300 transform ${
-                            isOpen
-                                ? "opacity-100 translate-x-0"
-                                : "opacity-0 translate-x-4 pointer-events-none"
-                        }`}
-                        style={{
-                            background: cardBg,
-                            color: "#fff",
-                            borderLeft: `1px solid ${borderColor}`,
-                        }}
-                    >
-                        <h2 className="text-xl font-semibold mb-2">
-                            Community Ratings
-                        </h2>
-                        <p
-                            className="text-sm mb-6"
-                            style={{ color: "#E0E7FF" }}
-                        >
-                            Rate other artists' work
-                        </p>
-                        {communityImages.map((img, idx) => {
-                            const isLast = idx === communityImages.length - 1;
-                            // Compose S3 URL from imagePath
                             const s3Url = `https://paintprompt.s3.us-east-2.amazonaws.com/${img.imagePath}`;
                             return (
                                 <div
@@ -1710,10 +1335,12 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
-        {lightboxSrc && (
+
+            {/* Lightbox */}
+            {lightboxSrc && (
                 <div
                     onClick={() => setLightboxSrc(null)}
-            className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center p-4"
+                    className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center p-4"
                     role="dialog"
                     aria-modal="true"
                 >
