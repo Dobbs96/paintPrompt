@@ -154,6 +154,20 @@ const Home: React.FC = () => {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         }
       );
+      if (response.status === 401) {
+        let errorJson = null;
+        try {
+          errorJson = await response.json();
+        } catch {}
+        if (errorJson && errorJson.error && errorJson.error.toLowerCase().includes("session")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          setUsername(null);
+          setMessage("Session expired. Please log in again.");
+          setShowPromptError(true);
+          return;
+        }
+      }
       const result = await response.text();
       if (response.ok) {
         const parsedMaterials = result
@@ -251,27 +265,42 @@ const Home: React.FC = () => {
       page: communityPage,
       username,
     });
-    {
-      const token = localStorage.getItem("token");
-      fetch(
-        `${API_BASE}/api/community-ratings/images?currentUser=${encodeURIComponent(
-          username ?? ""
-        )}&page=${communityPage}&size=10`,
-        {
-          headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    const token = localStorage.getItem("token");
+    fetch(
+      `${API_BASE}/api/community-ratings/images?currentUser=${encodeURIComponent(
+        username ?? ""
+      )}&page=${communityPage}&size=10`,
+      {
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      }
+    )
+      .then(async (res) => {
+        if (res.status === 401) {
+          let errorJson = null;
+          try {
+            errorJson = await res.json();
+          } catch {}
+          if (errorJson && errorJson.error && errorJson.error.toLowerCase().includes("session")) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("username");
+            setUsername(null);
+            setCommunityError("Session expired. Please log in again.");
+            setCommunityLoading(false);
+            return null;
+          }
         }
-      )
-        .then((res) => res.json())
-        .then((data) => {
-          setCommunityImages((prev) => [...prev, ...data.images]);
-          setCommunityHasMore(data.images.length === 10);
-          setCommunityLoading(false);
-        })
-        .catch(() => {
-          setCommunityError("Failed to load images");
-          setCommunityLoading(false);
-        });
-    }
+        return res.json();
+      })
+      .then((data) => {
+        if (!data) return;
+        setCommunityImages((prev) => [...prev, ...data.images]);
+        setCommunityHasMore(data.images.length === 10);
+        setCommunityLoading(false);
+      })
+      .catch(() => {
+        setCommunityError("Failed to load images");
+        setCommunityLoading(false);
+      });
   }, [communityPage, isOpen, username]);
 
   const handleCommunityRate = async (
@@ -281,7 +310,7 @@ const Home: React.FC = () => {
   ) => {
     try {
       const token = localStorage.getItem("token");
-      await fetch(
+      const response = await fetch(
         `${API_BASE}/api/community-ratings/rate?currentUser=${encodeURIComponent(
           username ?? ""
         )}`,
@@ -294,6 +323,19 @@ const Home: React.FC = () => {
           body: JSON.stringify({ targetUsername, imagePath, rating }),
         }
       );
+      if (response.status === 401) {
+        let errorJson = null;
+        try {
+          errorJson = await response.json();
+        } catch {}
+        if (errorJson && errorJson.error && errorJson.error.toLowerCase().includes("session")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          setUsername(null);
+          setCommunityError("Session expired. Please log in again.");
+          return;
+        }
+      }
       setCommunityImages((prev) =>
         prev.map((img) =>
           img.imagePath === imagePath && img.username === targetUsername
@@ -368,6 +410,21 @@ const Home: React.FC = () => {
           headers: token ? { Authorization: `Bearer ${token}` } : undefined,
         }
       );
+      if (response.status === 401) {
+        // Try to parse JSON error
+        let errorJson = null;
+        try {
+          errorJson = await response.json();
+        } catch {}
+        if (errorJson && errorJson.error && errorJson.error.toLowerCase().includes("session")) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("username");
+          setUsername(null);
+          setMessage("Session expired. Please log in again.");
+          setShowPromptError(true);
+          return;
+        }
+      }
       const result = await response.text();
       if (response.ok) {
         setGeneratedPrompt(result);

@@ -91,5 +91,7 @@ class JwtFilter extends OncePerRequestFilter {
             }
         }
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"Session expired. Please log in again.\"}");
     }
 }
