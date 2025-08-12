@@ -336,10 +336,17 @@ const Home: React.FC = () => {
           return;
         }
       }
+      let newAvg = rating;
+      let newCount = 1;
+      try {
+        const data = await response.json();
+        if (typeof data?.avgRating === "number") newAvg = data.avgRating;
+        if (typeof data?.ratingCount === "number") newCount = data.ratingCount;
+      } catch {}
       setCommunityImages((prev) =>
         prev.map((img) =>
           img.imagePath === imagePath && img.username === targetUsername
-            ? { ...img, avgRating: rating, ratingCount: 1 }
+            ? { ...img, avgRating: newAvg, ratingCount: newCount }
             : img
         )
       );
@@ -1049,7 +1056,8 @@ const Home: React.FC = () => {
             {communityImages.map((img, idx) => {
               const isLast = idx === communityImages.length - 1;
               // Compose S3 URL from imagePath
-              const s3Url = `https://paintprompt.s3.us-east-2.amazonaws.com/${img.imagePath}`;
+              const version = encodeURIComponent(img.publishTs || img.title || "");
+              const s3Url = `https://paintprompt.s3.us-east-2.amazonaws.com/${img.imagePath}?v=${version}`;
               return (
                 <div
                   className="mb-6 community-image-card"

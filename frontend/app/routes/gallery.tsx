@@ -162,7 +162,7 @@ export default function Gallery() {
         <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
           {artworks.map((art, index) => {
             console.log("art.image:", art.image); // 👈 See what this prints
-
+            const version = encodeURIComponent(art.date ?? art.upload_ts ?? "");
             return (
               <div
                 key={index}
@@ -171,10 +171,10 @@ export default function Gallery() {
                 <img
                   src={
                     art.image?.startsWith("/uploads/")
-                      ? `${API_BASE}${art.image}`
+                      ? `${API_BASE}${art.image}?v=${version}`
                       : art.image?.startsWith("http")
                       ? art.image
-                      : `https://paintprompt.s3.us-east-2.amazonaws.com/${art.image}`
+                      : `https://paintprompt.s3.us-east-2.amazonaws.com/${art.image}?v=${version}`
                   }
                   alt={art.title}
                   className="w-full h-48 object-cover rounded-lg border border-gray-300 mb-3"
