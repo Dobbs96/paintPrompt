@@ -1200,15 +1200,16 @@ const Home: React.FC = () => {
                     }}
                     className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
                     style={{
-                        background: "#AC83CA",
+                        background: "#FF0000",
                         color: "#fff",
                         border: "1px solid #E5E7EB",
+                        transition: "background 0.3s ease",
                     }}
                     onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "#8B5FBF")
+                        (e.currentTarget.style.background = "#e50000")
                     }
                     onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "#AC83CA")
+                        (e.currentTarget.style.background = "#FF0000")
                     }
                 >
                     Sign Out
@@ -1287,6 +1288,7 @@ const Home: React.FC = () => {
                                         style={{
                                             fontWeight: 600,
                                             margin: "8px 0 4px 0",
+                                            textAlign: "center",
                                         }}
                                     >
                                         {img.title}
@@ -1295,9 +1297,9 @@ const Home: React.FC = () => {
                                         className="img-rating"
                                         style={{
                                             display: "flex",
+                                            flexDirection: "column",
                                             alignItems: "center",
                                             justifyContent: "center",
-                                            gap: 6,
                                         }}
                                     >
                                         <StarRating
@@ -1314,6 +1316,7 @@ const Home: React.FC = () => {
                                         <span
                                             className="rating-count"
                                             style={{
+                                                marginTop: 4,
                                                 color: "#AAA",
                                                 fontWeight: 500,
                                             }}
