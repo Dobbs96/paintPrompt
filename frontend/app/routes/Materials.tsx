@@ -6,7 +6,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL;
 //for future thought: remove category? introduce emoji that users can change?
 interface Material {
     name: string;
-    category: string;
+    //category: string;
     icon: string;
 }
 
@@ -43,7 +43,7 @@ export default function Materials() {
                     .filter(Boolean)
                     .map((name) => ({
                         name,
-                        category: "Uncategorized",
+                        //category: "Uncategorized",
                         icon: "📦",
                     }));
                 setMaterials(parsedMaterials);
@@ -68,7 +68,7 @@ export default function Materials() {
 
         const newEntry = {
             name: newMaterial.trim(),
-            category: "Uncategorized",
+            //category: "Uncategorized",
             icon: "➕",
         };
 
@@ -150,8 +150,14 @@ export default function Materials() {
             {/* Header */}
             <button
                 onClick={() => navigate("/home")}
-                className="mb-4 px-4 py-2 rounded-full font-semibold text-white shadow"
+                className="mb-4 px-4 py-2 rounded-full font-semibold text-white shadow "
                 style={buttonStyle}
+                onMouseEnter={(e) =>
+                    (e.currentTarget.style.background = "#8B5FBF")
+                }
+                onMouseLeave={(e) =>
+                    (e.currentTarget.style.background = "#AC83CA")
+                }
             >
                 ← Back to Home
             </button>
@@ -196,9 +202,13 @@ export default function Materials() {
                         </button>
                         <div className="text-4xl mb-2">{material.icon}</div>
                         <h3 className="font-bold">{material.name}</h3>
-                        <p className="text-sm text-gray-500">
-                            Category: {material.category}
-                        </p>
+
+                        {/*
+            <p className="text-sm text-gray-500">
+              Category: {material.category}
+            </p>
+
+            */}
                     </div>
                 ))}
             </div>
@@ -222,7 +232,7 @@ export default function Materials() {
                     </button>
                     <button
                         onClick={handleAddMaterial}
-                        className="px-4 py-2 bg-purple-400 hover:bg-purple-500 text-white rounded-md"
+                        className="px-4 py-2 hover:bg-[#946BB8] text-white rounded-md bg-[#AC83CA]"
                     >
                         Add Material
                     </button>
