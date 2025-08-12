@@ -1,10 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
-// const BUTTON_BG = "#AC83CA";      // same purple as Home
-const BUTTON_BORDER = "#E5E7EB"; // light gray border
 const BUTTON_BG = "#AC83CA"; // same purple as Home
-// const API_BASE = "http://localhost:8080";
+const BUTTON_BORDER = "#E5E7EB"; // light gray border
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
+//const API_BASE = "http://localhost:8080";
 
 export default function Gallery() {
     const navigate = useNavigate();
@@ -13,6 +12,9 @@ export default function Gallery() {
     const [artworks, setArtworks] = useState<any[]>([]);
     const [uploadSelected, setUploadSelected] = useState(false);
     const [publishSelected, setPublishSelected] = useState(false);
+    const [loadingAction, setLoadingAction] = useState<string | null>(null);
+    const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+    const fileInputRef = useRef<HTMLInputElement | null>(null);
 
     function formatDate(d?: string | number | null) {
         if (!d && d !== 0) return "—";
@@ -283,11 +285,12 @@ export default function Gallery() {
                             ← Back to Home
                         </button>
 
-                        <div className="text-center">
-                            <h1 className="text-3xl font-bold mb-1 text-purple-900">
+                        {/* Title */}
+                        <div className="text-center flex-1">
+                            <h1 className="text-3xl font-bold">
                                 Your Painting Journey
                             </h1>
-                            <p className="text-lg text-purple-900/70">
+                            <p className="text-lg opacity-90">
                                 Explore your artistic growth and creativity.
                             </p>
                         </div>
