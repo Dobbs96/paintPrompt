@@ -1247,7 +1247,7 @@ const Home: React.FC = () => {
                             className="text-sm mb-6"
                             style={{ color: "#E0E7FF" }}
                         >
-                            Rate other artists' work
+                            Discover and rate inspiring artwork
                         </p>
                         {communityImages.map((img, idx) => {
                             const isLast = idx === communityImages.length - 1;

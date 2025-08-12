@@ -37,15 +37,28 @@ export default function Materials() {
 
             const result = await response.text();
             if (response.ok) {
+                const iconMap: Record<string, string> = {
+                    Pen: "🖊️",
+                    Pencil: "✏️",
+                    Paper: "📄",
+                    "Paint Brush": "🖌️",
+                    Marker: "🖍️",
+                    Canvas: "🖼️",
+                    Easel: "🎨",
+                    Crayon: "🖍️",
+                    Paint: "🎨",
+                    Clay: "🏺",
+                };
+
                 const parsedMaterials = result
                     .split(",")
                     .map((m) => m.trim())
                     .filter(Boolean)
                     .map((name) => ({
                         name,
-                        //category: "Uncategorized",
-                        icon: "📦",
+                        icon: iconMap[name] || "📦",
                     }));
+
                 setMaterials(parsedMaterials);
             }
         } catch (error) {
