@@ -147,15 +147,6 @@ export default function Materials() {
 
     return (
         <div className="p-8 max-w-5xl mx-auto">
-            <div className="flex justify-center mb-6">
-                <button
-                    className="bg-[#AC83CA] hover:bg-[#946888] text-white text-lg sm:text-xl font-semibold px-6 py-3 rounded-lg"
-                    onClick={() => navigate("/Home")}
-                >
-                    Back
-                </button>
-            </div>
-
             {/* Header */}
             <button
                 onClick={() => navigate("/home")}
