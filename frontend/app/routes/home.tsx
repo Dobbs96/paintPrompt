@@ -386,8 +386,8 @@ const Home: React.FC = () => {
                         key={star}
                         style={{
                             cursor: disabled ? "not-allowed" : "pointer",
-                            width: 16,
-                            height: 16,
+                            width: 12,
+                            height: 12,
                             borderRadius: "50%",
                             display: "inline-block",
                             margin: "0 2px",
@@ -1255,6 +1255,7 @@ const Home: React.FC = () => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
+                                            alignContent: "center",
                                             textAlign: "center",
                                         }}
                                     >
