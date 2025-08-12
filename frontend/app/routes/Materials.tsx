@@ -3,10 +3,8 @@ import { useNavigate } from "react-router";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 //const API_BASE = "http://localhost:8080";
 
-//for future thought: remove category? introduce emoji that users can change?
 interface Material {
     name: string;
-    //category: string;
     icon: string;
 }
 
@@ -14,7 +12,6 @@ export default function Materials() {
     const navigate = useNavigate();
 
     const [username, setUsername] = useState<string | null>(null);
-
     const [search, setSearch] = useState("");
     const [materials, setMaterials] = useState<Material[]>([]);
     const [newMaterial, setNewMaterial] = useState("");
@@ -81,7 +78,6 @@ export default function Materials() {
 
         const newEntry = {
             name: newMaterial.trim(),
-            //category: "Uncategorized",
             icon: "➕",
         };
 
@@ -131,7 +127,6 @@ export default function Materials() {
             );
 
             if (response.ok) {
-                // remove from local state
                 const updated = materials.filter(
                     (m) => m.name !== materialName
                 );
@@ -152,37 +147,51 @@ export default function Materials() {
         m.name.toLowerCase().includes(search.toLowerCase())
     );
 
-    const buttonStyle = {
-        background: "#AC83CA",
-        color: "#fff",
-        border: "1px solid #E5E7EB",
-    };
-
     return (
-        <div className="p-8 max-w-5xl mx-auto">
-            {/* Header */}
-            <button
-                onClick={() => navigate("/home")}
-                className="mb-4 px-4 py-2 rounded-full font-semibold text-white shadow "
-                style={buttonStyle}
-                onMouseEnter={(e) =>
-                    (e.currentTarget.style.background = "#8B5FBF")
-                }
-                onMouseLeave={(e) =>
-                    (e.currentTarget.style.background = "#AC83CA")
-                }
+        <div className="p-6 sm:p-8 font-sans bg-[#F5F3FF] min-h-screen">
+            <header
+                className="mb-10 p-8 text-white rounded-lg"
+                style={{
+                    background: "#AC83CA",
+                }}
             >
-                ← Back to Home
-            </button>
-            <h1 className="text-3xl font-bold mb-2 text-center">
-                My Materials Inventory
-            </h1>
-            <p className="text-center text-gray-600 mb-6">
-                Manage your materials and stay inspired!
-            </p>
+                <div className="max-w-5xl mx-auto flex items-center justify-between">
+                    {/* Back Button */}
+                    <button
+                        onClick={() => navigate("/home")}
+                        className="px-6 py-2 rounded-full font-semibold transition"
+                        style={{
+                            background: "#AC83CA",
+                            border: "2px solid white",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#8B5FBF";
+                            e.currentTarget.style.fontWeight = "bold";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#AC83CA";
+                            e.currentTarget.style.fontWeight = "600";
+                        }}
+                    >
+                        ← Back to Home
+                    </button>
+
+                    {/* Title */}
+                    <div className="text-center flex-1">
+                        <h1 className="text-3xl font-bold">
+                            My Materials Inventory
+                        </h1>
+                        <p className="text-lg opacity-90">
+                            Manage your materials and stay inspired!
+                        </p>
+                    </div>
+
+                    <div style={{ width: "135px" }} />
+                </div>
+            </header>
 
             {/* Search */}
-            <div className="flex justify-center mb-10">
+            <div className="flex justify-center mb-6">
                 <input
                     type="text"
                     value={search}
@@ -190,6 +199,33 @@ export default function Materials() {
                     placeholder="Filter Materials by Keyword"
                     className="border border-gray-300 px-4 py-2 rounded-md w-80 shadow-sm"
                 />
+            </div>
+
+            {/* Add New Material - centered */}
+            <div className="flex justify-center mb-10">
+                <div className="flex flex-col sm:flex-row gap-4 items-center">
+                    <input
+                        type="text"
+                        value={newMaterial}
+                        onChange={(e) => setNewMaterial(e.target.value)}
+                        placeholder="Enter name of the material"
+                        className="border px-4 py-2 rounded-md w-full sm:w-80"
+                    />
+                    <div className="flex gap-2">
+                        <button
+                            onClick={handleCancel}
+                            className="px-4 py-2 border border-black rounded-md"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={handleAddMaterial}
+                            className="px-4 py-2 hover:bg-[#946BB8] text-white rounded-md bg-[#AC83CA]"
+                        >
+                            Add Material
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {/* Material Grid */}
@@ -200,7 +236,22 @@ export default function Materials() {
                 {filtered.map((material, index) => (
                     <div
                         key={index}
-                        className="flex flex-col items-center p-4 border rounded-lg shadow-sm relative"
+                        className="flex flex-col items-center p-4 rounded-lg relative transition-all duration-200"
+                        style={{
+                            border: "2px solid #AC83CA",
+                            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                            backgroundColor: "white",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.border = "2px solid #8B5FBF";
+                            e.currentTarget.style.boxShadow =
+                                "0 4px 12px rgba(0,0,0,0.15)";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.border = "2px solid #AC83CA";
+                            e.currentTarget.style.boxShadow =
+                                "0 2px 6px rgba(0,0,0,0.1)";
+                        }}
                     >
                         <button
                             onClick={() => {
@@ -215,41 +266,8 @@ export default function Materials() {
                         </button>
                         <div className="text-4xl mb-2">{material.icon}</div>
                         <h3 className="font-bold">{material.name}</h3>
-
-                        {/*
-            <p className="text-sm text-gray-500">
-              Category: {material.category}
-            </p>
-
-            */}
                     </div>
                 ))}
-            </div>
-
-            {/* Add New Material */}
-            <h2 className="text-xl font-bold mb-2">Add New Material</h2>
-            <div className="flex flex-col sm:flex-row gap-4 items-center">
-                <input
-                    type="text"
-                    value={newMaterial}
-                    onChange={(e) => setNewMaterial(e.target.value)}
-                    placeholder="Enter name of the material"
-                    className="border px-4 py-2 rounded-md w-full sm:w-80"
-                />
-                <div className="flex gap-2">
-                    <button
-                        onClick={handleCancel}
-                        className="px-4 py-2 border border-black rounded-md"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleAddMaterial}
-                        className="px-4 py-2 hover:bg-[#946BB8] text-white rounded-md bg-[#AC83CA]"
-                    >
-                        Add Material
-                    </button>
-                </div>
             </div>
         </div>
     );

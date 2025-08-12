@@ -250,6 +250,25 @@ const Home: React.FC = () => {
             setCommunityError("");
         }
     }, [isOpen]);
+    // Reset community images and page when sidebar is opened
+    useEffect(() => {
+        if (isOpen) {
+            setCommunityImages([]);
+            setCommunityPage(0);
+            setCommunityHasMore(true);
+            setCommunityError("");
+        }
+    }, [isOpen]);
+
+    // Close lightbox on Escape key
+    useEffect(() => {
+        if (!lightboxSrc) return;
+        const onKey = (e: KeyboardEvent) => {
+            if (e.key === "Escape") setLightboxSrc(null);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    }, [lightboxSrc]);
 
     const lastCommunityImageRef = React.useCallback(
         (node: HTMLDivElement | null) => {
@@ -617,6 +636,118 @@ const Home: React.FC = () => {
                                         }}
                                     >
                                         {medium}
+                                    </button>
+                                );
+                            })}
+                            <div
+                                key="other"
+                                className="flex flex-col items-center"
+                                style={{ margin: "0 0.1rem" }}
+                            >
+                                {!customMedium && (
+                                    <button
+                                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                                            selectedMedium &&
+                                            !materials.includes(selectedMedium)
+                                                ? "border-[#AC83CA] font-bold"
+                                                : "border-gray-300"
+                                        }`}
+                                        onClick={() =>
+                                            setCustomMedium("typing")
+                                        }
+                                        style={{ minWidth: 0 }}
+                                    >
+                                        Other...
+                                    </button>
+                                )}
+                                {customMedium === "typing" && (
+                                    <input
+                                        autoFocus
+                                        className="px-2 py-2 rounded-full bg-white text-gray-700 font-bold shadow-sm border border-[#AC83CA] text-center outline-none"
+                                        style={{ minWidth: 80, maxWidth: 160 }}
+                                        placeholder="Other..."
+                                        value={selectedMedium}
+                                        onChange={(e) =>
+                                            setSelectedMedium(e.target.value)
+                                        }
+                                        onBlur={() => {
+                                            if (selectedMedium.trim()) {
+                                                setTimeout(() => {
+                                                    setShowMediumOptions(false);
+                                                    setTimeout(
+                                                        () =>
+                                                            setMediumOptionsVisible(
+                                                                false
+                                                            ),
+                                                        500
+                                                    );
+                                                }, 1000);
+                                            }
+                                            setCustomMedium("");
+                                        }}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter") {
+                                                if (selectedMedium.trim()) {
+                                                    setTimeout(() => {
+                                                        setShowMediumOptions(
+                                                            false
+                                                        );
+                                                        setTimeout(
+                                                            () =>
+                                                                setMediumOptionsVisible(
+                                                                    false
+                                                                ),
+                                                            500
+                                                        );
+                                                    }, 1000);
+                                                }
+                                                setCustomMedium("");
+                                            }
+                                        }}
+                                    />
+                                )}
+                            </div>
+                        </div>
+                    )}
+                    {mediumOptionVisible && (
+                        <div
+                            className={`flex flex-row items-center justify-center gap-1 mt-2 transition-opacity duration-500 ${
+                                showMediumOptions
+                                    ? "opacity-100"
+                                    : "opacity-0 pointer-events-none"
+                            }`}
+                            style={{ zIndex: 2 }}
+                        >
+                            {materials.slice(0, 6).map((medium) => {
+                                const isSelected = selectedMedium === medium;
+                                const label =
+                                    typeof medium === "string" && medium.length > 0
+                                        ? medium.charAt(0).toUpperCase() + medium.slice(1)
+                                        : medium;
+                                return (
+                                    <button
+                                        key={medium}
+                                        className={`px-4 py-2 whitespace-nowrap rounded-full font-semibold shadow-sm border transition hover:bg-gray-100 bg-white text-gray-700 ${
+                                            isSelected
+                                                ? "border-[#AC83CA] font-bold"
+                                                : "border-gray-300"
+                                        }`}
+                                        style={{ margin: "0 0.1rem" }}
+                                        onClick={() => {
+                                            setSelectedMedium(medium);
+                                            setTimeout(() => {
+                                                setShowMediumOptions(false);
+                                                setTimeout(
+                                                    () =>
+                                                        setMediumOptionsVisible(
+                                                            false
+                                                        ),
+                                                    500
+                                                );
+                                            }, 1000);
+                                        }}
+                                    >
+                                        {label}
                                     </button>
                                 );
                             })}
@@ -1215,6 +1346,68 @@ const Home: React.FC = () => {
                     Sign Out
                 </a>
             </div>
+            {/* Top Right Links */}
+            <div
+                className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
+                    isOpen ? "right-64" : "right-8"
+                } pr-6 space-x-4`}
+            >
+                <a
+                    onClick={() => navigate("/gallery")}
+                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+                    style={{
+                        background: "#AC83CA", // main purple
+                        color: "#fff",
+                        border: "1px solid #E5E7EB",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#8B5FBF")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#AC83CA")
+                    }
+                >
+                    Gallery
+                </a>
+                <a
+                    onClick={() => navigate("/materials")}
+                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+                    style={{
+                        background: "#AC83CA",
+                        color: "#fff",
+                        border: "1px solid #E5E7EB",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#8B5FBF")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#AC83CA")
+                    }
+                >
+                    Materials
+                </a>
+                <a
+                    onClick={() => {
+                        localStorage.removeItem("token");
+                        localStorage.removeItem("username");
+                        navigate("/");
+                    }}
+                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+                    style={{
+                        background: "#AC83CA",
+                        color: "#fff",
+                        border: "1px solid #E5E7EB",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#8B5FBF")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#AC83CA")
+                    }
+                >
+                    Sign Out
+                </a>
+            </div>
 
             {/* Sidebar */}
             <div
@@ -1365,6 +1558,177 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
+        </div>
+    );
+            {/* Sidebar */}
+            <div
+                id="sidebar"
+                className={`relative ${
+                    isOpen ? "w-64" : "w-8"
+                } transition-all duration-300`}
+                style={{
+                    background: cardBg,
+                    borderLeft: `1px solid ${borderColor}`,
+                }}
+            >
+                <div className="flex flex-col h-full p-4">
+                    <div
+                        className={`absolute top-0 right-0 w-64 p-4 h-full overflow-y-auto border-l transition-all duration-300 transform ${
+                            isOpen
+                                ? "opacity-100 translate-x-0"
+                                : "opacity-0 translate-x-4 pointer-events-none"
+                        }`}
+                        style={{
+                            background: cardBg,
+                            color: "#fff",
+                            borderLeft: `1px solid ${borderColor}`,
+                        }}
+                    >
+                        <h2 className="text-xl font-semibold mb-2">
+                            Community Ratings
+                        </h2>
+                        <p
+                            className="text-sm mb-6"
+                            style={{ color: "#E0E7FF" }}
+                        >
+                            Rate other artists' work
+                        </p>
+                        {communityImages.map((img, idx) => {
+                            const isLast = idx === communityImages.length - 1;
+                            // Compose S3 URL from imagePath
+                            const s3Url = `https://paintprompt.s3.us-east-2.amazonaws.com/${img.imagePath}`;
+                            return (
+                                <div
+                                    className="mb-6 community-image-card"
+                                    key={img.username + img.imagePath}
+                                    ref={
+                                        isLast
+                                            ? lastCommunityImageRef
+                                            : undefined
+                                    }
+                                >
+                                    <div
+                                        className="p-2 rounded-lg img-container cursor-zoom-in"
+                                        style={{ background: "#fff" }}
+                                        onClick={() => setLightboxSrc(s3Url)}
+                                        title="Click to enlarge"
+                                    >
+                                        <img
+                                            src={s3Url}
+                                            alt={img.title}
+                                            className="w-full h-auto rounded-lg"
+                                            style={{
+                                                width: "100%",
+                                                height: 220,
+                                                objectFit: "cover",
+                                                borderRadius: 8,
+                                            }}
+                                            onError={(e) =>
+                                                (e.currentTarget.style.display =
+                                                    "none")
+                                            }
+                                        />
+                                    </div>
+                                    <div
+                                        className="img-title"
+                                        style={{
+                                            fontWeight: 600,
+                                            margin: "8px 0 4px 0",
+                                            textAlign: "center",
+                                        }}
+                                    >
+                                        {img.title}
+                                    </div>
+                                    <div
+                                        className="img-rating"
+                                        style={{
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            gap: 6,
+                                        }}
+                                    >
+                                        <StarRating
+                                            value={img.avgRating}
+                                            onChange={(rating) =>
+                                                handleCommunityRate(
+                                                    img.username,
+                                                    img.imagePath,
+                                                    rating
+                                                )
+                                            }
+                                            disabled={img.username === username}
+                                        />
+                                        <span
+                                            className="rating-count"
+                                            style={{
+                                                color: "#AAA",
+                                                fontWeight: 500,
+                                            }}
+                                        >
+                                            {img.ratingCount > 0
+                                                ? `(${img.ratingCount})`
+                                                : ""}
+                                        </span>
+                                    </div>
+                                </div>
+                            );
+                        })}
+                        {communityLoading && (
+                            <div
+                                className="loading"
+                                style={{
+                                    textAlign: "center",
+                                    margin: "16px 0",
+                                }}
+                            >
+                                Loading...
+                            </div>
+                        )}
+                        {communityError && (
+                            <div
+                                className="error"
+                                style={{
+                                    textAlign: "center",
+                                    margin: "16px 0",
+                                }}
+                            >
+                                {communityError}
+                            </div>
+                        )}
+                        {!communityHasMore && !communityLoading && (
+                            <div
+                                className="end"
+                                style={{
+                                    textAlign: "center",
+                                    margin: "16px 0",
+                                }}
+                            >
+                                No more images
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+        {lightboxSrc && (
+                <div
+                    onClick={() => setLightboxSrc(null)}
+            className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center p-4"
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div className="max-w-4xl w-full">
+                        <img
+                            src={lightboxSrc || undefined}
+                            alt="Enlarged artwork"
+                            className="w-full h-auto max-h-[85vh] object-contain rounded-lg shadow-xl"
+                        />
+                        <div className="text-center text-white/80 text-sm mt-3 select-none">
+                            Click anywhere to close • Press Esc
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
