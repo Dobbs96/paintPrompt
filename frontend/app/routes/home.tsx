@@ -1272,8 +1272,10 @@ const Home: React.FC = () => {
                                         <span
                                             className="rating-count"
                                             style={{
-                                                marginLeft: 8,
-                                                color: "#888",
+                                                display: "block",
+                                                marginTop: 4,
+                                                color: "#AAA",
+                                                fontWeight: 500,
                                             }}
                                         >
                                             {img.ratingCount > 0
