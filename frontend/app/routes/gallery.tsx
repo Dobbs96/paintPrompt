@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+const BUTTON_BG = "#AC83CA";      // same purple as Home
+const BUTTON_BORDER = "#E5E7EB";  // light gray border
+
 const API_BASE = "http://localhost:8080";
 
 export default function Gallery() {
@@ -132,24 +135,47 @@ export default function Gallery() {
 
   return (
     <div className="p-6 sm:p-8 font-sans bg-[#F5F3FF] min-h-screen">
-      {/* Header (with back button inside, gradient lavender) */}
-<header className="rounded-lg mb-8 shadow bg-gradient-to-r from-[#E9D5FF] via-[#D8B4FE] to-[#C4B5FD]">
-  <div className="grid grid-cols-3 items-center p-6 sm:p-8">
+      <header
+  className="mb-10 p-8 text-white rounded-lg"
+  style={{
+    background: "#AC83CA", // Trademark purple
+  }}
+>
+  <div className="max-w-5xl mx-auto flex items-center justify-between">
+    {/* Back Button */}
     <button
       onClick={() => navigate("/home")}
-      className="justify-self-start text-purple-800 border border-purple-300 px-4 py-2 rounded-md hover:bg-white/60 transition"
+      className="px-6 py-2 rounded-full font-semibold transition"
+      style={{
+        background: "#AC83CA",
+        border: "2px solid white",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = "#8B5FBF"; // darker purple on hover
+        e.currentTarget.style.fontWeight = "bold";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = "#AC83CA";
+        e.currentTarget.style.fontWeight = "600";
+      }}
     >
       ← Back to Home
     </button>
 
-    <div className="text-center">
-      <h1 className="text-3xl font-bold mb-1 text-purple-900">Your Painting Journey</h1>
-      <p className="text-lg text-purple-900/70">Explore your artistic growth and creativity.</p>
+    {/* Title */}
+    <div className="text-center flex-1">
+      <h1 className="text-3xl font-bold">Your Painting Journey</h1>
+      <p className="text-lg opacity-90">
+        Explore your artistic growth and creativity.
+      </p>
     </div>
 
-    <div />
+    {/* Right-side spacer */}
+    <div style={{ width: "135px" }} />
   </div>
 </header>
+
+
 
 
       {/* Gallery */}
@@ -198,30 +224,32 @@ export default function Gallery() {
   <div className="max-w-md mx-auto bg-white border border-gray-200 rounded-xl shadow-md p-6">
     {/* TOP: Upload / Publish toggles */}
     <div className="flex items-center justify-center gap-3 mb-4">
-      <button
-        type="button"
-        onClick={() => setUploadSelected(!uploadSelected)}
-        className={
-          "px-5 py-2 rounded-full border transition " +
-          (uploadSelected
-            ? "bg-purple-600 text-white border-purple-700"
-            : "bg-white text-purple-700 border-purple-300 hover:bg-purple-50")
-        }
-      >
-        Upload
-      </button>
-      <button
-        type="button"
-        onClick={() => setPublishSelected(!publishSelected)}
-        className={
-          "px-5 py-2 rounded-full border transition " +
-          (publishSelected
-            ? "bg-purple-300 text-purple-900 border-purple-400"
-            : "bg-white text-purple-900 border-purple-200 hover:bg-purple-50")
-        }
-      >
-        Publish
-      </button>
+    <button
+  type="button"
+  onClick={() => setUploadSelected(!uploadSelected)}
+  className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+  style={
+    uploadSelected
+      ? { background: BUTTON_BG, color: "#fff", border: `1px solid ${BUTTON_BORDER}` }
+      : { background: "#fff", color: "#374151", border: "1px solid #D1D5DB" } // neutral chip
+  }
+>
+  Upload
+</button>
+
+<button
+  type="button"
+  onClick={() => setPublishSelected(!publishSelected)}
+  className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+  style={
+    publishSelected
+      ? { background: BUTTON_BG, color: "#fff", border: `1px solid ${BUTTON_BORDER}` }
+      : { background: "#fff", color: "#374151", border: "1px solid #D1D5DB" }
+  }
+>
+  Publish
+</button>
+
     </div>
 
     {/* TITLE under the buttons */}
@@ -248,25 +276,21 @@ export default function Gallery() {
 
     {/* Submit button at the bottom */}
     <button
-      onClick={() => {
-        if (publishSelected) {
-          handlePublish();   // publish overrides upload
-        } else if (uploadSelected) {
-          handleUpload();
-        }
-      }}
-      disabled={
-        !uploadTitle || !uploadFile || (!uploadSelected && !publishSelected)
-      }
-      className={
-        "w-full px-6 py-3 rounded-lg transition " +
-        (uploadTitle && uploadFile && (uploadSelected || publishSelected)
-          ? "bg-black text-white hover:opacity-90"
-          : "bg-gray-200 text-gray-500 cursor-not-allowed")
-      }
-    >
-      Submit
-    </button>
+  onClick={() => {
+    if (publishSelected) handlePublish();
+    else if (uploadSelected) handleUpload();
+  }}
+  disabled={!uploadTitle || !uploadFile || (!uploadSelected && !publishSelected)}
+  className="w-full px-6 py-3 rounded-xl font-medium transition shadow-sm"
+  style={
+    !uploadTitle || !uploadFile || (!uploadSelected && !publishSelected)
+      ? { background: "#E5E7EB", color: "#9CA3AF", cursor: "not-allowed" }
+      : { background: BUTTON_BG, color: "#fff", border: `1px solid ${BUTTON_BORDER}` }
+  }
+>
+  Submit
+</button>
+
   </div>
 </section>
 

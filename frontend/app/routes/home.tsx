@@ -988,35 +988,57 @@ const Home: React.FC = () => {
         {isOpen ? "🡢" : "🡠"}
       </button>
 
-      {/* Top Right Links */}
-      <div
-        className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
-          isOpen ? "right-64" : "right-8"
-        } pr-6 space-x-4`}
-      >
-        <a
-          onClick={() => navigate("/gallery")}
-          className="px-3 py-1 rounded-full text-white font-medium bg-pink-300 hover:bg-pink-400 transition-all shadow-sm cursor-pointer"
-        >
-          Gallery
-        </a>
-        <a
-          onClick={() => navigate("/materials")}
-          className="px-3 py-1 rounded-full text-white font-medium bg-purple-300 hover:bg-purple-400 transition-all shadow-sm cursor-pointer"
-        >
-          Materials
-        </a>
-        <a
-          onClick={() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("username");
-            navigate("/");
-          }}
-          className="px-3 py-1 rounded-full text-white font-medium bg-red-400 hover:bg-red-500 transition-all shadow-sm cursor-pointer"
-        >
-          Sign Out
-        </a>
-      </div>
+   {/* Top Right Links */}
+<div
+  className={`absolute top-6 z-40 flex text-sm transition-all duration-300 ${
+    isOpen ? "right-64" : "right-8"
+  } pr-6 space-x-4`}
+>
+  <a
+    onClick={() => navigate("/gallery")}
+    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+    style={{
+      background: "#AC83CA", // main purple
+      color: "#fff",
+      border: "1px solid #E5E7EB",
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.background = "#8B5FBF")}
+    onMouseLeave={(e) => (e.currentTarget.style.background = "#AC83CA")}
+  >
+    Gallery
+  </a>
+  <a
+    onClick={() => navigate("/materials")}
+    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+    style={{
+      background: "#AC83CA",
+      color: "#fff",
+      border: "1px solid #E5E7EB",
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.background = "#8B5FBF")}
+    onMouseLeave={(e) => (e.currentTarget.style.background = "#AC83CA")}
+  >
+    Materials
+  </a>
+  <a
+    onClick={() => {
+      localStorage.removeItem("token");
+      localStorage.removeItem("username");
+      navigate("/");
+    }}
+    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+    style={{
+      background: "#AC83CA",
+      color: "#fff",
+      border: "1px solid #E5E7EB",
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.background = "#8B5FBF")}
+    onMouseLeave={(e) => (e.currentTarget.style.background = "#AC83CA")}
+  >
+    Sign Out
+  </a>
+</div>
+
 
       {/* Sidebar */}
       <div
