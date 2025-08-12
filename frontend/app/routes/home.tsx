@@ -1257,7 +1257,7 @@ const Home: React.FC = () => {
                             borderLeft: `1px solid ${borderColor}`,
                         }}
                     >
-                        <h2 className="text-xl font-semibold mb-2">
+                        <h2 className="text-xl font-semibold mb-2 text-center">
                             Community Ratings
                         </h2>
                         <p
