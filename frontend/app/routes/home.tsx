@@ -386,16 +386,19 @@ const Home: React.FC = () => {
                         key={star}
                         style={{
                             cursor: disabled ? "not-allowed" : "pointer",
-                            color:
-                                (hover || value) >= star ? "#f5b301" : "#ccc",
-                            fontSize: 22,
+                            width: 16,
+                            height: 16,
+                            borderRadius: "50%",
+                            display: "inline-block",
+                            margin: "0 2px",
+                            backgroundColor:
+                                (hover || value) >= star ? "#6664ef" : "#aaa",
+                            transition: "background-color 0.3s ease",
                         }}
                         onMouseEnter={() => !disabled && setHover(star)}
                         onMouseLeave={() => setHover(0)}
                         onClick={() => !disabled && onChange(star)}
-                    >
-                        ★
-                    </span>
+                    ></span>
                 ))}
             </div>
         );
@@ -1201,7 +1204,7 @@ const Home: React.FC = () => {
                             className="text-sm mb-6"
                             style={{ color: "#E0E7FF" }}
                         >
-                            Rate other artists' work
+                            Rate other's work
                         </p>
                         {communityImages.map((img, idx) => {
                             const isLast = idx === communityImages.length - 1;
@@ -1242,6 +1245,7 @@ const Home: React.FC = () => {
                                         style={{
                                             fontWeight: 600,
                                             margin: "8px 0 4px 0",
+                                            textAlign: "center",
                                         }}
                                     >
                                         {img.title}
@@ -1251,6 +1255,7 @@ const Home: React.FC = () => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
+                                            textAlign: "center",
                                         }}
                                     >
                                         <StarRating
