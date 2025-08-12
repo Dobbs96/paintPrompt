@@ -15,6 +15,7 @@ public class UserData {
     private String upload_ts;
     private String publish_ts;
     private String ratings;
+    private String community_ratings;
 
     // Getters and setters
     public String getUsername() {
@@ -64,5 +65,12 @@ public class UserData {
     }
     public void setRatings(String ratings) {
         this.ratings = ratings;
+    }
+
+    public String getCommunity_ratings() {
+        return community_ratings;
+    }
+    public void setCommunity_ratings(String community_ratings) {
+        this.community_ratings = community_ratings;
     }
 }

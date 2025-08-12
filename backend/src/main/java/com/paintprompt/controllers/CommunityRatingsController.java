@@ -1,28 +1,34 @@
 package com.paintprompt.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.paintprompt.database.models.UserData;
 import com.paintprompt.database.repositories.UserDataRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-import java.util.*;
-import java.util.stream.Collectors;
-
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Value;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Exception;
-import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/community-ratings")
@@ -56,6 +62,19 @@ public class CommunityRatingsController {
         public int ratingCount;
     }
 
+    // Helper: extract global image index from imagePath like "published-img7.png" or "img7.png"
+    private int extractGlobalImageIndex(String path) {
+        if (path == null) return -1;
+        String checkPath = path.trim();
+    if (checkPath.startsWith("published-")) checkPath = checkPath.substring("published-".length());
+        if (checkPath.matches("img\\d+\\.png")) {
+            try {
+                return Integer.parseInt(checkPath.substring(3, checkPath.length() - 4));
+            } catch (Exception ignored) {}
+        }
+        return -1;
+    }
+
     // --- S3 Image Upload Endpoint ---
     @PostMapping("/upload-image")
     public ResponseEntity<String> uploadImage(
@@ -82,7 +101,7 @@ public class CommunityRatingsController {
             for (String path : paths) {
                 path = path.trim();
                 // Remove published- prefix if present
-                String checkPath = path.startsWith("published-") ? path.substring(9) : path;
+                String checkPath = path.startsWith("published-") ? path.substring("published-".length()) : path;
                 if (checkPath.matches("img\\d+\\.png")) {
                     try {
                         int n = Integer.parseInt(checkPath.substring(3, checkPath.length() - 4));
@@ -107,6 +126,8 @@ public class CommunityRatingsController {
                             .bucket(s3Bucket)
                             .key(key)
                             .contentType(file.getContentType())
+                            // Disable client-side caching entirely
+                            .cacheControl("no-cache, no-store, must-revalidate")
                             .build(),
                     software.amazon.awssdk.core.sync.RequestBody.fromBytes(file.getBytes())
             );
@@ -153,8 +174,6 @@ public class CommunityRatingsController {
             String[] paths = user.getImage_paths() != null ? user.getImage_paths().split(",") : new String[0];
             String[] titles = user.getTitles() != null ? user.getTitles().split(",") : new String[0];
             String[] publishTs = user.getPublish_ts() != null ? user.getPublish_ts().split(",") : new String[0];
-            String[] ratingsArr = user.getRatings() != null ? user.getRatings().split(",") : new String[0];
-
             for (int i = 0; i < paths.length; i++) {
                 String path = paths[i].trim();
                 if (!path.startsWith("published-")) continue;
@@ -163,13 +182,36 @@ public class CommunityRatingsController {
                 dto.title = i < titles.length ? titles[i].trim() : "";
                 dto.username = user.getUsername();
                 dto.publishTs = i < publishTs.length ? publishTs[i].trim() : "";
-                // Ratings: can be improved to support multiple ratings per image
-                try {
-                    dto.avgRating = i < ratingsArr.length ? Double.parseDouble(ratingsArr[i].trim()) : 0;
-                } catch (Exception e) {
-                    dto.avgRating = 0;
+
+                // Compute average rating and count across all users' community_ratings for this image index (imgN -> index N-1)
+                int index = extractGlobalImageIndex(path); // 1-based index from imgN
+                if (index > 0) {
+                    int pos = index - 1;
+                    int sum = 0;
+                    int count = 0;
+                    for (UserData rater : allUsers) {
+                        String csv = rater.getCommunity_ratings();
+                        if (csv == null || csv.isEmpty()) continue;
+                        String[] arr = csv.split(",");
+                        if (pos < arr.length) {
+                            String val = arr[pos] != null ? arr[pos].trim() : "";
+                            if (!val.isEmpty() && !val.equalsIgnoreCase("null")) {
+                                try {
+                                    int v = Integer.parseInt(val);
+                                    if (v >= 1 && v <= 5) {
+                                        sum += v;
+                                        count++;
+                                    }
+                                } catch (NumberFormatException ignore) {}
+                            }
+                        }
+                    }
+                    dto.ratingCount = count;
+                    dto.avgRating = count > 0 ? (double) sum / count : 0.0;
+                } else {
+                    dto.ratingCount = 0;
+                    dto.avgRating = 0.0;
                 }
-                dto.ratingCount = dto.avgRating > 0 ? 1 : 0;
                 images.add(dto);
             }
         }
@@ -192,37 +234,71 @@ public class CommunityRatingsController {
     }
 
     @PostMapping("/rate")
-    public ResponseEntity<String> submitRating(@RequestBody SubmitRatingRequest req, @RequestParam String currentUser) {
+    public ResponseEntity<?> submitRating(@RequestBody SubmitRatingRequest req, @RequestParam String currentUser) {
         if (req.rating < 1 || req.rating > 5) {
             return ResponseEntity.badRequest().body("Rating must be between 1 and 5");
         }
         if (req.targetUsername.equals(currentUser)) {
             return ResponseEntity.badRequest().body("You cannot rate your own artwork");
         }
-        UserData user = userDataRepository.findByUsername(req.targetUsername);
-        if (user == null) {
+        UserData targetUser = userDataRepository.findByUsername(req.targetUsername);
+        if (targetUser == null) {
             return ResponseEntity.status(404).body("Target user not found");
         }
-        String[] paths = user.getImage_paths() != null ? user.getImage_paths().split(",") : new String[0];
-        String[] ratingsArr = user.getRatings() != null ? user.getRatings().split(",") : new String[paths.length];
-        // Ensure ratingsArr is same length as paths
-        if (ratingsArr.length < paths.length) {
-            ratingsArr = Arrays.copyOf(ratingsArr, paths.length);
+        // Determine global image index for the given imagePath
+        int index = extractGlobalImageIndex(req.imagePath);
+        if (index <= 0) {
+            return ResponseEntity.status(404).body("Invalid image path");
         }
-        boolean found = false;
-        for (int i = 0; i < paths.length; i++) {
-            if (paths[i].trim().equals(req.imagePath)) {
-                // For simplicity, just overwrite the rating (can be extended to support multiple ratings per image)
-                ratingsArr[i] = String.valueOf(req.rating);
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
+        // Verify that the target user has this image published
+        String[] paths = targetUser.getImage_paths() != null ? targetUser.getImage_paths().split(",") : new String[0];
+        boolean imageExists = Arrays.stream(paths).anyMatch(p -> {
+            String pp = p == null ? "" : p.trim();
+            return pp.equals(req.imagePath);
+        });
+        if (!imageExists) {
             return ResponseEntity.status(404).body("Image not found for user");
         }
-        user.setRatings(String.join(",", ratingsArr));
-        userDataRepository.save(user);
-        return ResponseEntity.ok("Rating submitted");
+
+        // Store rating in rater's community_ratings CSV at position index-1
+        UserData rater = userDataRepository.findByUsername(currentUser);
+        if (rater == null) {
+            return ResponseEntity.status(404).body("Rater user not found");
+        }
+        int pos = index - 1;
+        String csv = rater.getCommunity_ratings();
+        String[] arr = (csv == null || csv.isEmpty()) ? new String[pos + 1] : csv.split(",");
+        if (arr.length <= pos) {
+            arr = Arrays.copyOf(arr, pos + 1);
+        }
+        arr[pos] = String.valueOf(req.rating);
+        rater.setCommunity_ratings(String.join(",", Arrays.stream(arr).map(s -> s == null ? "" : s).toArray(String[]::new)));
+        userDataRepository.save(rater);
+
+        // Recompute avg and count across all users for this image index to return immediately
+        List<UserData> allUsers = userDataRepository.findAll();
+        int sum = 0;
+        int count = 0;
+        for (UserData u : allUsers) {
+            String c = u.getCommunity_ratings();
+            if (c == null || c.isEmpty()) continue;
+            String[] a = c.split(",");
+            if (pos < a.length) {
+                String v = a[pos] != null ? a[pos].trim() : "";
+                if (!v.isEmpty() && !v.equalsIgnoreCase("null")) {
+                    try {
+                        int iv = Integer.parseInt(v);
+                        if (iv >= 1 && iv <= 5) {
+                            sum += iv;
+                            count++;
+                        }
+                    } catch (NumberFormatException ignored) {}
+                }
+            }
+        }
+        Map<String, Object> resp = new HashMap<>();
+        resp.put("avgRating", count > 0 ? (double) sum / count : 0.0);
+        resp.put("ratingCount", count);
+        return ResponseEntity.ok(resp);
     }
 }

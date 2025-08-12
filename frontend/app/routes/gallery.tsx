@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
-// const API_BASE = "http://localhost:8080";
+// const BUTTON_BG = "#AC83CA";      // same purple as Home
+const BUTTON_BORDER = "#E5E7EB"; // light gray border
+
+const API_BASE = "http://localhost:8080";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Gallery() {
@@ -135,12 +138,29 @@ export default function Gallery() {
 
     return (
         <div className="p-6 sm:p-8 font-sans bg-[#F5F3FF] min-h-screen">
-            {/* Header (with back button inside, gradient lavender) */}
-            <header className="rounded-lg mb-8 shadow bg-gradient-to-r from-[#E9D5FF] via-[#D8B4FE] to-[#C4B5FD]">
-                <div className="grid grid-cols-3 items-center p-6 sm:p-8">
+            <header
+                className="mb-10 p-8 text-white rounded-lg"
+                style={{
+                    background: "#AC83CA", // Trademark purple
+                }}
+            >
+                <div className="max-w-5xl mx-auto flex items-center justify-between">
+                    {/* Back Button */}
                     <button
                         onClick={() => navigate("/home")}
-                        className="justify-self-start text-purple-800 border border-purple-300 px-4 py-2 rounded-md hover:bg-white/60 transition"
+                        className="px-6 py-2 rounded-full font-semibold transition"
+                        style={{
+                            background: "#AC83CA",
+                            border: "2px solid white",
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = "#8B5FBF"; // darker purple on hover
+                            e.currentTarget.style.fontWeight = "bold";
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = "#AC83CA";
+                            e.currentTarget.style.fontWeight = "600";
+                        }}
                     >
                         ← Back to Home
                     </button>
@@ -154,7 +174,8 @@ export default function Gallery() {
                         </p>
                     </div>
 
-                    <div />
+                    {/* Right-side spacer */}
+                    <div style={{ width: "135px" }} />
                 </div>
             </header>
 
@@ -169,7 +190,9 @@ export default function Gallery() {
                 <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
                     {artworks.map((art, index) => {
                         console.log("art.image:", art.image); // 👈 See what this prints
-
+                        const version = encodeURIComponent(
+                            art.date ?? art.upload_ts ?? ""
+                        );
                         return (
                             <div
                                 key={index}
@@ -178,10 +201,10 @@ export default function Gallery() {
                                 <img
                                     src={
                                         art.image?.startsWith("/uploads/")
-                                            ? `${API_BASE}${art.image}`
+                                            ? `${API_BASE}${art.image}?v=${version}`
                                             : art.image?.startsWith("http")
                                             ? art.image
-                                            : `https://paintprompt.s3.us-east-2.amazonaws.com/${art.image}`
+                                            : `https://paintprompt.s3.us-east-2.amazonaws.com/${art.image}?v=${version}`
                                     }
                                     alt={art.title}
                                     className="w-full h-48 object-cover rounded-lg border border-gray-300 mb-3"
@@ -211,23 +234,40 @@ export default function Gallery() {
                         <button
                             type="button"
                             onClick={() => setUploadSelected(!uploadSelected)}
-                            className={
-                                "px-5 py-2 rounded-full border transition " +
-                                (uploadSelected
-                                    ? "bg-purple-600 text-white border-purple-700"
-                                    : "bg-white text-purple-700 border-purple-300 hover:bg-purple-50")
+                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+                            style={
+                                uploadSelected
+                                    ? {
+                                          background: BUTTON_BG,
+                                          color: "#fff",
+                                          border: `1px solid ${BUTTON_BORDER}`,
+                                      }
+                                    : {
+                                          background: "#fff",
+                                          color: "#374151",
+                                          border: "1px solid #D1D5DB",
+                                      } // neutral chip
                             }
                         >
                             Upload
                         </button>
+
                         <button
                             type="button"
                             onClick={() => setPublishSelected(!publishSelected)}
-                            className={
-                                "px-5 py-2 rounded-full border transition " +
-                                (publishSelected
-                                    ? "bg-purple-300 text-purple-900 border-purple-400"
-                                    : "bg-white text-purple-900 border-purple-200 hover:bg-purple-50")
+                            className="px-6 py-2 rounded-full shadow-sm font-semibold transition"
+                            style={
+                                publishSelected
+                                    ? {
+                                          background: BUTTON_BG,
+                                          color: "#fff",
+                                          border: `1px solid ${BUTTON_BORDER}`,
+                                      }
+                                    : {
+                                          background: "#fff",
+                                          color: "#374151",
+                                          border: "1px solid #D1D5DB",
+                                      }
                             }
                         >
                             Publish
@@ -261,24 +301,29 @@ export default function Gallery() {
                     {/* Submit button at the bottom */}
                     <button
                         onClick={() => {
-                            if (publishSelected) {
-                                handlePublish(); // publish overrides upload
-                            } else if (uploadSelected) {
-                                handleUpload();
-                            }
+                            if (publishSelected) handlePublish();
+                            else if (uploadSelected) handleUpload();
                         }}
                         disabled={
                             !uploadTitle ||
                             !uploadFile ||
                             (!uploadSelected && !publishSelected)
                         }
-                        className={
-                            "w-full px-6 py-3 rounded-lg transition " +
-                            (uploadTitle &&
-                            uploadFile &&
-                            (uploadSelected || publishSelected)
-                                ? "bg-black text-white hover:opacity-90"
-                                : "bg-gray-200 text-gray-500 cursor-not-allowed")
+                        className="w-full px-6 py-3 rounded-xl font-medium transition shadow-sm"
+                        style={
+                            !uploadTitle ||
+                            !uploadFile ||
+                            (!uploadSelected && !publishSelected)
+                                ? {
+                                      background: "#E5E7EB",
+                                      color: "#9CA3AF",
+                                      cursor: "not-allowed",
+                                  }
+                                : {
+                                      background: BUTTON_BG,
+                                      color: "#fff",
+                                      border: `1px solid ${BUTTON_BORDER}`,
+                                  }
                         }
                     >
                         Submit

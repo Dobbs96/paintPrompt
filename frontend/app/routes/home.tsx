@@ -359,11 +359,20 @@ const Home: React.FC = () => {
                     return;
                 }
             }
+            let newAvg = rating;
+            let newCount = 1;
+            try {
+                const data = await response.json();
+                if (typeof data?.avgRating === "number")
+                    newAvg = data.avgRating;
+                if (typeof data?.ratingCount === "number")
+                    newCount = data.ratingCount;
+            } catch {}
             setCommunityImages((prev) =>
                 prev.map((img) =>
                     img.imagePath === imagePath &&
                     img.username === targetUsername
-                        ? { ...img, avgRating: rating, ratingCount: 1 }
+                        ? { ...img, avgRating: newAvg, ratingCount: newCount }
                         : img
                 )
             );
@@ -1151,13 +1160,35 @@ const Home: React.FC = () => {
             >
                 <a
                     onClick={() => navigate("/gallery")}
-                    className="px-3 py-1 rounded-full text-white font-medium bg-pink-300 hover:bg-pink-400 transition-all shadow-sm cursor-pointer"
+                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+                    style={{
+                        background: "#AC83CA", // main purple
+                        color: "#fff",
+                        border: "1px solid #E5E7EB",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#8B5FBF")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#AC83CA")
+                    }
                 >
                     Gallery
                 </a>
                 <a
                     onClick={() => navigate("/materials")}
-                    className="px-3 py-1 rounded-full text-white font-medium bg-purple-300 hover:bg-purple-400 transition-all shadow-sm cursor-pointer"
+                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+                    style={{
+                        background: "#AC83CA",
+                        color: "#fff",
+                        border: "1px solid #E5E7EB",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#8B5FBF")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#AC83CA")
+                    }
                 >
                     Materials
                 </a>
@@ -1167,7 +1198,18 @@ const Home: React.FC = () => {
                         localStorage.removeItem("username");
                         navigate("/");
                     }}
-                    className="px-3 py-1 rounded-full text-white font-medium bg-red-400 hover:bg-red-500 transition-all shadow-sm cursor-pointer"
+                    className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
+                    style={{
+                        background: "#AC83CA",
+                        color: "#fff",
+                        border: "1px solid #E5E7EB",
+                    }}
+                    onMouseEnter={(e) =>
+                        (e.currentTarget.style.background = "#8B5FBF")
+                    }
+                    onMouseLeave={(e) =>
+                        (e.currentTarget.style.background = "#AC83CA")
+                    }
                 >
                     Sign Out
                 </a>
@@ -1204,7 +1246,7 @@ const Home: React.FC = () => {
                             className="text-sm mb-6"
                             style={{ color: "#E0E7FF" }}
                         >
-                            Rate other's work
+                            Rate other artists' work
                         </p>
                         {communityImages.map((img, idx) => {
                             const isLast = idx === communityImages.length - 1;
@@ -1245,7 +1287,6 @@ const Home: React.FC = () => {
                                         style={{
                                             fontWeight: 600,
                                             margin: "8px 0 4px 0",
-                                            textAlign: "center",
                                         }}
                                     >
                                         {img.title}
@@ -1255,8 +1296,6 @@ const Home: React.FC = () => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
-                                            justifyContent: "center",
-                                            gap: 6,
                                         }}
                                     >
                                         <StarRating
@@ -1273,8 +1312,8 @@ const Home: React.FC = () => {
                                         <span
                                             className="rating-count"
                                             style={{
-                                                color: "#AAA",
-                                                fontWeight: 500,
+                                                marginLeft: 8,
+                                                color: "#888",
                                             }}
                                         >
                                             {img.ratingCount > 0
