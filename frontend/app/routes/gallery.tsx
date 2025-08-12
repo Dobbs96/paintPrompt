@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
 // const BUTTON_BG = "#AC83CA";      // same purple as Home
 const BUTTON_BORDER = "#E5E7EB"; // light gray border
-
-const API_BASE = "http://localhost:8080";
+const BUTTON_BG = "#AC83CA"; // same purple as Home
+// const API_BASE = "http://localhost:8080";
 const API_BASE = import.meta.env.VITE_API_BASE_URL;
 
 export default function Gallery() {
