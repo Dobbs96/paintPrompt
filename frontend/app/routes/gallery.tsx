@@ -10,7 +10,10 @@ export default function Gallery() {
 
   useEffect(() => {
     const username = localStorage.getItem("username");
-    fetch(`${API_BASE}/api/gallery/user-images?currentUser=${username}`)
+    const token = localStorage.getItem("token");
+    fetch(`${API_BASE}/api/gallery/user-images?currentUser=${username}`, {
+      headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+    })
       .then((res) => res.json())
       .then((data) => setArtworks(data));
   }, []);
@@ -29,12 +32,14 @@ export default function Gallery() {
     formData.append("username", username);
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `${API_BASE}/api/community-ratings/upload-image`,
         {
           method: "POST",
           body: formData,
           headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
             title: uploadTitle,
           },
         }
@@ -44,6 +49,8 @@ export default function Gallery() {
         console.log("✅ Image uploaded successfully.");
         setUploadTitle("");
         setUploadFile(null);
+        // Refresh gallery list
+        window.location.reload();
       } else {
         const errorText = await response.text();
         console.error("❌ Upload failed:", errorText);
@@ -73,12 +80,14 @@ export default function Gallery() {
     formData.append("username", username);
 
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(
         `${API_BASE}/api/community-ratings/upload-image`,
         {
           method: "POST",
           body: formData,
           headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
             published: "true",
             title: uploadTitle,
           },
@@ -89,6 +98,8 @@ export default function Gallery() {
         console.log("✅ Image published successfully.");
         setUploadTitle("");
         setUploadFile(null);
+        // Refresh gallery list
+        window.location.reload();
       } else {
         const errorText = await response.text();
         console.error("❌ Upload failed:", errorText);

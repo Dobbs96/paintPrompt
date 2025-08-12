@@ -1,12 +1,14 @@
 package com.paintprompt.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.paintprompt.database.models.UserCredential;
 import com.paintprompt.database.models.UserData;
 import com.paintprompt.database.repositories.UserCredentialRepository;
 import com.paintprompt.database.repositories.UserDataRepository;
+import com.paintprompt.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -17,6 +19,9 @@ public class AuthController {
     
     @Autowired
     private UserDataRepository userDataRepo;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public String signup(@RequestBody UserCredential user) {
@@ -35,14 +40,18 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody UserCredential user) {
+    public ResponseEntity<?> login(@RequestBody UserCredential user) {
         UserCredential existingUser = userRepo.findById(user.getUsername()).orElse(null);
         if (existingUser == null) {
-            return "User not found!";
+            return ResponseEntity.status(401).body("User not found!");
         }
         if (!existingUser.getPassword().equals(user.getPassword())) {
-            return "Incorrect password!";
+            return ResponseEntity.status(401).body("Incorrect password!");
         }
-        return "Sign in successful!";
+        String token = jwtUtil.generateToken(existingUser.getUsername());
+        return ResponseEntity.ok(java.util.Map.of(
+            "message", "Sign in successful!",
+            "token", token
+        ));
     }
 }
