@@ -1255,8 +1255,8 @@ const Home: React.FC = () => {
                                         style={{
                                             display: "flex",
                                             alignItems: "center",
-                                            alignContent: "center",
-                                            textAlign: "center",
+                                            justifyContent: "center",
+                                            gap: 6,
                                         }}
                                     >
                                         <StarRating
@@ -1273,8 +1273,6 @@ const Home: React.FC = () => {
                                         <span
                                             className="rating-count"
                                             style={{
-                                                display: "block",
-                                                marginTop: 4,
                                                 color: "#AAA",
                                                 fontWeight: 500,
                                             }}
