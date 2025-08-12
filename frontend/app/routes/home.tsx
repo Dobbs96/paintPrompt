@@ -605,8 +605,10 @@ const Home: React.FC = () => {
                             {materials.slice(0, 6).map((medium) => {
                                 const isSelected = selectedMedium === medium;
                                 const label =
-                                    typeof medium === "string" && medium.length > 0
-                                        ? medium.charAt(0).toUpperCase() + medium.slice(1)
+                                    typeof medium === "string" &&
+                                    medium.length > 0
+                                        ? medium.charAt(0).toUpperCase() +
+                                          medium.slice(1)
                                         : medium;
                                 return (
                                     <button
@@ -1215,15 +1217,16 @@ const Home: React.FC = () => {
                     }}
                     className="px-3 py-1 rounded-full font-medium transition-all shadow-sm cursor-pointer"
                     style={{
-                        background: "#AC83CA",
+                        background: "#FF0000",
                         color: "#fff",
                         border: "1px solid #E5E7EB",
+                        transition: "background 0.3s ease",
                     }}
                     onMouseEnter={(e) =>
-                        (e.currentTarget.style.background = "#8B5FBF")
+                        (e.currentTarget.style.background = "#ff4242")
                     }
                     onMouseLeave={(e) =>
-                        (e.currentTarget.style.background = "#AC83CA")
+                        (e.currentTarget.style.background = "#FF0000")
                     }
                 >
                     Sign Out
@@ -1254,14 +1257,14 @@ const Home: React.FC = () => {
                             borderLeft: `1px solid ${borderColor}`,
                         }}
                     >
-                        <h2 className="text-xl font-semibold mb-2">
+                        <h2 className="text-xl font-semibold mb-2 text-center">
                             Community Ratings
                         </h2>
                         <p
                             className="text-sm mb-6"
                             style={{ color: "#E0E7FF" }}
                         >
-                            Rate other artists' work
+                            Discover and rate inspiring artwork
                         </p>
                         {communityImages.map((img, idx) => {
                             const isLast = idx === communityImages.length - 1;
@@ -1313,9 +1316,9 @@ const Home: React.FC = () => {
                                         className="img-rating"
                                         style={{
                                             display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            gap: 6,
+                                            flexDirection: "column", // stack stars & number vertically
+                                            alignItems: "center", // center horizontally
+                                            justifyContent: "center", // center vertically if needed
                                         }}
                                     >
                                         <StarRating
@@ -1332,12 +1335,13 @@ const Home: React.FC = () => {
                                         <span
                                             className="rating-count"
                                             style={{
+                                                marginTop: 4,
                                                 color: "#AAA",
                                                 fontWeight: 500,
                                             }}
                                         >
                                             {img.ratingCount > 0
-                                                ? `(${img.ratingCount})`
+                                                ? `${img.ratingCount} Votes`
                                                 : ""}
                                         </span>
                                     </div>
@@ -1380,10 +1384,10 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
-        {lightboxSrc && (
+            {lightboxSrc && (
                 <div
                     onClick={() => setLightboxSrc(null)}
-            className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center p-4"
+                    className="fixed inset-0 z-[1000] bg-black/90 flex items-center justify-center p-4"
                     role="dialog"
                     aria-modal="true"
                 >
